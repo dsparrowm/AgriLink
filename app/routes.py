@@ -5,6 +5,10 @@ from flask import request, jsonify
 from app import app
 from app.models import User
 
+@app.route('/status', methods=['GET'])
+def status():
+    """Check server connection status"""
+    return jsonify({'Status': 'Ok!!'})
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -42,8 +46,10 @@ def register():
         db.session.add(farmer)
         db.session.commit()
         return jsonify({'message': 'Registration successful'}), 200
-    elif role == 'buyer':
-        user = User(name=form_name, email=form_email,
+    elif form_role == 'buyer':
+        user = User(name=form_name,
+                    emiail=form_email,
+                    role=form_role,
                     password_hash=user.set_password(form_password))
         db.session.add(user)
         db.session.commit()
