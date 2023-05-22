@@ -2,8 +2,9 @@
 with the fromtend
 """
 from flask import request, jsonify
-from app import app
+from app import app, db
 from app.models import User
+from app.models import Farmer
 
 @app.route('/status', methods=['GET'])
 def status():
@@ -15,7 +16,7 @@ def login():
     data = request.get_json()
     form_email = data.get('email')
     form_password = data.get('password')
-    user = User.query.filter_by(email=user_email).first()
+    user = User.query.filter_by(email=form_email).first()
     if user is None or not user.check_password(form_password):
         return jsonify({'message': 'Invalid email or password'})
     else:
@@ -48,9 +49,9 @@ def register():
         return jsonify({'message': 'Registration successful'}), 200
     elif form_role == 'buyer':
         user = User(name=form_name,
-                    emiail=form_email,
+                    email=form_email,
                     role=form_role,
-                    password_hash=user.set_password(form_password))
+                    password_hash=form_password)
         db.session.add(user)
         db.session.commit()
         return jsonify({'message': 'Registration successful'}), 200

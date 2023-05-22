@@ -1,4 +1,5 @@
 from app import db
+from werkzeug.security import generate_password_hash,check_password_hash
 
 class User(db.Model):
     __tablename__ = "User"
@@ -6,7 +7,7 @@ class User(db.Model):
     name = db.Column(db.String(120), nullable=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128), nullable=False)
-    role = db.Column(db.String(10), nullable=False)
+    role = db.Column(db.String(20), nullable=False)
 
     def __repr__(self):
         return '<User {}>'.format(self.name)
