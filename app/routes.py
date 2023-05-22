@@ -5,7 +5,8 @@ from flask import request, jsonify
 from app import app
 from app.models import User
 
-@app.route('/login', methods=['GET'])
+@app.route('/status', methods=['GET'])
+def status():
     """Check server connection status"""
     return jsonify({'Status': 'Ok!!'})
 
