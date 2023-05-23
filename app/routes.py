@@ -2,8 +2,8 @@
 with the fromtend
 """
 from flask import request, jsonify
-from app import app
-from app.models import User
+from app import app, db
+from app.models import User, Farmer
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -17,7 +17,7 @@ def login():
     data = request.get_json()
     form_email = data.get('email')
     form_password = data.get('password')
-    user = User.query.filter_by(email=user_email).first()
+    user = User.query.filter_by(email=form_email).first()
     if user is None or check_password_hash(user.password_hash, form_password) != True:
         return jsonify({'message': 'Invalid email or password'}), 401
     else:

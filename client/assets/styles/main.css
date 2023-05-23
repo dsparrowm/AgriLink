@@ -1,0 +1,177 @@
+/* =======================================
+          Global CSS Variables
+=========================================*/
+:root {
+    /*
+    Our base color, with one tint, and one shade - 
+    body and typogaphry is generally the base colour
+    */
+    --clr-base:    #666;
+    --clr-base-lt: #999;
+    --clr-base-dk: #333;
+
+    /*
+    Primary brand color - skyblue - with shades and 
+    tints via Sass functions
+    */
+    --clr-primary:     skyblue;
+    --clr-primary-lt:  #346d85;
+    --clr-primary-ltr: #b3e0f2;
+    --clr-primary-dk:  #71c5e7;
+    --clr-primary-dkr: #5bbce4;
+
+    /* 
+    Secondary brand color - hotpink - with shades and
+    tints via Sass functions
+    */
+    --clr-secondary:     hotpink;
+    --clr-secondary-lt:  #ff83c1;
+    --clr-secondary-ltr: #ff9cce;
+    --clr-secondary-dk:  #ff50a7;
+    --clr-secondary-dkr: #ff369b;
+
+    /* Neutrals */
+    --clr-ntrl-min: #fff;
+    --clr-ntrl-max: #000;
+
+    /* Base font size - applied at body / html level */
+    --fs-base: 16px;
+
+    /* Larger than heading font sizes */
+    --fs-giga: 80px;
+    --fs-mega: 70px;
+    --fs-kilo: 60px;
+
+    /* Heading font sizes */
+    --fs-h1: 36px;
+    --fs-h2: 32px;
+    --fs-h3: 28px;
+    --fs-h4: 24px;
+    --fs-h5: 20px;
+    --fs-h6: 18px;
+
+    /* Smaller than heading font sizes */
+    --fs-milli: 14px;
+    --fs-micro: 10px;
+    --fs-nano:  8px;
+
+    /* Font family applied at body / html */
+    --ff-base:      'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --ff-alt-alpha: 'Open Sans', sans-serif;
+    --ff-alt-beta:  'Roboto', sans-serif;
+
+    /* Icon font family */
+    --ff-icon:      'My Icon Font';
+    /* Idon sizes */
+}
+
+
+/* =======================================
+          Global CSS Reset
+=========================================*/
+
+
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margin */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* Responsive Font Size (Optimal Text at Every Breakpoint) */
+html {
+    font-size: calc(15px + 0.390625vw);
+}
+
+/* Set core root defaults */
+html:focus-within {
+    scroll-behavior: smooth;
+}
+
+/* Set core body defaults */
+body {
+    min-height: 100vh;
+    text-rendering: optimizeSpeed;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+/* Set Heading font size */
+h1 { font-size: var(--fs-h1);}
+h2 { font-size: var(--fs-h2);}
+h3 { font-size: var(--fs-h3);}
+h4 { font-size: var(--fs-h4);}
+h5 { font-size: var(--fs-h5);}
+h6 { font-size: var(--fs-h6);}
+
+.title     { font-size: var(--fs-h1);}
+.sub-title { font-size: var(--fs-h3);}
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role='list'],
+ol[role='list'] {
+  list-style-type: none;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+/* Make images easier to work with */
+img,
+picture,
+video,
+canvas,
+svg {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+  /*
+    Avoid text overflows
+  */
+p, h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+}
+
+/*
+    Create a root stacking context
+*/
+#root, #__nuxt {
+    isolation: isolate;
+}
+
+.icon-sm {
+    height: 50px;
+    width: 50px;
+}
+
+/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+   scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
