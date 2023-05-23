@@ -46,8 +46,9 @@ def register():
     if form_role == 'farmer':
         form_location = data.get('location')
         form_phone = data.get('phone')
+        hashed_password = generate_password_hash(form_password)
         user = User(name=form_name, email=form_email,
-                    password_harsh=user.set_password(form_password))
+                    password_harsh=hashed_password)
         db.session.add(user)
         #necessary to generate user_id used to create farmer object
         db.session.commit()
@@ -60,7 +61,7 @@ def register():
     elif form_role == 'buyer':
         hashed_password = generate_password_hash(form_password)
         user = User(name=form_name,
-                    emiail=form_email,
+                    email=form_email,
                     role=form_role,
                     password_hash=hashed_password)
         db.session.add(user)
