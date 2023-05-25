@@ -140,7 +140,9 @@ def get_category():
     end_index = start_index + per_page
 
     categories = Category.query.get(category)
-    products = Product.query.filter_by(id=categories.id).all()
+    if not categories:
+        return jsonify({'error': 'no products from this category'})
+    products = Product.query.filter_by(category_id=categories.id).all()
     total_items = len(products)
     total_pages = (total_items // per_page) + (1 if total_items % per_page > 0 else 0)
     paginated_products = products[start_index:end_index]
@@ -194,6 +196,11 @@ def add_product():
 
     #query Category table to get id from it
     p_category = Category.query.get(category)
+    if not p_category:
+        new_category = Category(name=category)
+        db.session.add(new_category)
+        db.session.commit()
+        p_category = Category.query.get(category)
 
     #Check if the file exists and is of allowed type
     if file.filename == '':
