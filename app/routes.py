@@ -3,7 +3,7 @@ with the fromtend
 """
 from flask import request, jsonify
 from app import app, db
-from app.models import User, Farmer
+from app.models import User, Farmer, Category
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from werkzeug.utils import secure_filename
@@ -163,8 +163,13 @@ def get_category():
     return jsonify(response)
 
 @app.route('/product/upload', methods=['POST'])
+@jwt_required
 def add_product():
     """enables a farmer to create and list new products"""
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'user not found'})
     #Check if all required fields are present in the request
     if 'name' not in request.form:
         return jsonify({'error': 'Product name is missing'})
@@ -172,6 +177,10 @@ def add_product():
         return jsonify({'error': 'Product price is missing'})
     if 'quantity' not in request.form:
         return jsonify({'error': 'Product quantity is missing'})
+    if 'category' not in request.form:
+        return jsonify({'error': 'product category is missing'})
+    if 'description' not in request.form:
+        return jsonify({'error': 'product description is missing'})
     if 'image' not in request.files:
         return jsonify({'error': 'No image file provided'})
 
@@ -179,7 +188,12 @@ def add_product():
     name = request.form['name']
     price = int(request.form['price'])
     quantity = int(request.form['quantity'])
+    category = request.form['category']
+    description = request.form['description']
     file = request.files['image']
+
+    #query Category table to get id from it
+    p_category = Category.query.get(category)
 
     #Check if the file exists and is of allowed type
     if file.filename == '':
@@ -194,7 +208,9 @@ def add_product():
 
     #Store the product details and image url in the database
     product = Product(name=name, price=price, quantity=quantity,
-                      image_url=file_path)
+                      image_url=file_path, farmer_id=user.id,
+                      category_id=p_category.id,
+                      description=description)
     db.session.add(product)
     db.session.commit()
 
