@@ -6,6 +6,8 @@ from app import app, db
 from app.models import User, Farmer
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from werkzeug.utils import secure_filename
+from app.helper import allowed_file
 
 
 @app.route('/status', methods=['GET'])
@@ -112,3 +114,88 @@ def update_user(id):
         return jsonify({'message': 'user updated successfully',
                         'user': user
                         })
+
+@app.route('/product/<int:id>', methods=['GET'])
+def get_product(id):
+    product = Product.query.get(id)
+    if product:
+        product_data = {
+                'id': product.id,
+                'name': product.name,
+                'price': product.price,
+                'quantity': product.quantity,
+                'image_url': product.image_url
+        }
+        return jsonify(product_data)
+    else:
+        return jsonify({'error': 'product not found'})
+
+@app.route('/products/category', methods=['GET'])
+def get_category():
+    page = int(request.args.get('page', 1))
+    per_page = int(request.args.get('per_page', 10))
+    category = request.args.get('category')
+
+    start_index = (page - 1) * per_page
+    end_index = start_index + per_page
+
+    categories = Category.query.get(category)
+    products = Product.query.filter_by(id=categories.id).all()
+    total_items = len(products)
+    total_pages = (total_items // per_page) + (1 if total_items % per_page > 0 else 0)
+    paginated_products = products[start_index:end_index]
+    response = {
+            'products': [
+                {
+                    'id': product.id,
+                    'name': product.name,
+                    'price': product.price,
+                    'quantity': product.quantity,
+                    'image_url': product.image_url
+                }
+                for product in paginated_products
+            ],
+            'page': page,
+            'per_page': per_page,
+            'total_items': total_items,
+            'total_pages': total_pages
+        }
+    return jsonify(response)
+
+@app.route('/product/upload', methods=['POST'])
+def add_product():
+    """enables a farmer to create and list new products"""
+    #Check if all required fields are present in the request
+    if 'name' not in request.form:
+        return jsonify({'error': 'Product name is missing'})
+    if 'price' not in request.form:
+        return jsonify({'error': 'Product price is missing'})
+    if 'quantity' not in request.form:
+        return jsonify({'error': 'Product quantity is missing'})
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image file provided'})
+
+    #Retrieve the values from the request
+    name = request.form['name']
+    price = int(request.form['price'])
+    quantity = int(request.form['quantity'])
+    file = request.files['image']
+
+    #Check if the file exists and is of allowed type
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'})
+    if not allowed_file(file.filename):
+        return jsonify({'error': 'Invalid file format'})
+
+    #Securely save the file to the upload directory
+    filename = secure_filename(file.filename)
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(file_path)
+
+    #Store the product details and image url in the database
+    product = Product(name=name, price=price, quantity=quantity,
+                      image_url=file_path)
+    db.session.add(product)
+    db.session.commit()
+
+    return jsonify({'message': 'Product uploaded successfully'})

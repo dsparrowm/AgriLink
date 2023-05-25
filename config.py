@@ -5,6 +5,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'very hard to guess'
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+    MAX_CONTENT_LENGTH = 5 * 1024 * 1024 #5 megabyte
+    UPLOAD_FOLDER = '/AgriLink/uploads' 
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
                     'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
