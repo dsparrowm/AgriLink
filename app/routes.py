@@ -202,7 +202,7 @@ def add_product():
         db.session.commit()
         p_category = Category.query.get(category)
 
-    #Check if the file exists and is of allowed type
+    #Check if the file exists and is of the allowed type
     if file.filename == '':
         return jsonify({'error': 'No selected file'})
     if not allowed_file(file.filename):
