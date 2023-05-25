@@ -1,6 +1,8 @@
 <template>
   <header id="AppHeader">
-    <div class="logo">Logo</div>
+    <NuxtLink to="/" class="logo">
+        Logo
+    </NuxtLink>
     <div class="menu">
         <ul class="menu__list"
         :class="{
@@ -46,7 +48,7 @@
             </NuxtLink>
             <NuxtLink
             v-else
-            to="'/profile'"
+            to="/profile"
             class="menu__link">
                 <font-awesome-icon icon="user"/>
             </NuxtLink>
