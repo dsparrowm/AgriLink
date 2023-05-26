@@ -9,7 +9,7 @@ export const APP_PAGES = [
   {
     ID: 1,
     name: 'PRODUCTS',
-    url: '/product',
+    url: '/products',
     isActive: false
   },
   {

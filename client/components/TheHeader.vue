@@ -93,6 +93,7 @@ export default {
             const activePage = this.pages
             .find(page => page.name.toLowerCase() === pageName);
             if (activePage) {
+                this.pages.map(page => page.isActive = false);
                 activePage.isActive = true;
             } else {
                 this.pages.map(page => page.isActive = false);

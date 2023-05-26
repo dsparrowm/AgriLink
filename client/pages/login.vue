@@ -66,7 +66,11 @@
             Forgot Password
         </NuxtLink>
         <div class="form__group">
-            <button class="btn from__submit" type="submit">Sign In</button>
+            <button
+            class="btn from__submit"
+            type="submit">
+                Sign In
+            </button>
         </div>
     </form>
   </div>
@@ -77,6 +81,11 @@ import { mapMutations, mapActions } from 'vuex';
 export default {
     name: 'LoginPage',
     layout: 'default',
+
+    head:{
+        title: 'AgriLink | Login'
+    },
+  
     data () {
         return {
             dismissCountDown: 5,

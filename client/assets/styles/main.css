@@ -86,20 +86,20 @@
 
 /* Responsive Font Size (Optimal Text at Every Breakpoint) */
 html {
-    font-size: calc(15px + 0.390625vw);
+  /* font-size: calc(15px + 0.390625vw); */
 }
 
 /* Set core root defaults */
 html:focus-within {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 
 /* Set core body defaults */
 body {
-    min-height: 100vh;
-    text-rendering: optimizeSpeed;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 /* Set Heading font size */
 h1 { font-size: var(--fs-h1);}
@@ -144,19 +144,19 @@ select {
     Avoid text overflows
   */
 p, h1, h2, h3, h4, h5, h6 {
-    overflow-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 /*
     Create a root stacking context
 */
 #root, #__nuxt {
-    isolation: isolate;
+  isolation: isolate;
 }
 
 .icon-sm {
-    height: 50px;
-    width: 50px;
+  height: 50px;
+  width: 50px;
 }
 
 /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
