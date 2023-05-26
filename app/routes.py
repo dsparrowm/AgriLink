@@ -78,9 +78,13 @@ def user_info():
     current_user = get_jwt_identity()
     user = User.query.get(current_user)
     return jsonify({'id': user.id,
-                    'name': user.name,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
                     'email': user.email,
-                    'role': user.role})
+                    'role': user.role,
+                    'phone': user.phone,
+                    'image_url': user.image_url
+                })
 
 @app.route('/updateUserInfo/<int:id>', methods=['PUT'])
 @jwt_required()
@@ -94,22 +98,46 @@ def update_user(id):
         return jsonify({'message': 'User Not Found'}), 404
     if user.role == 'farmer':
         farmer = Farmer.query.filter_by(user_id=user.id).first()
-        if 'name' in data:
-            user.name = data.get('name')
-            farmer.name = data.get('name')
+        if 'first_name' in data:
+            user.first_name = data.get('first_name')
+            farmer.first_name = data.get('first_name')
+        if 'last_name' in data:
+            user.last_name = data.get('last_name')
+            farmer.last_name = data.get('last_name')
         if 'email' in data:
             user.email = data.get('email')
         if 'phone' in data:
+            user.phone = data.get('phone')
             farmer.phone = data.get('phone')
+        if 'image' in data:
+            file = request.files['image']
+            if file.filename == '':
+                return jsonify({'error': 'no file selected'})
+            if not allowed_file(file.filename):
+                return jsonify({'error': 'Invalid file format'})
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['USER_IMAGE_FOLDER'], filename)
+            file.save(file_path)
+            user.image_url = file_path
         db.session.commit()
         return jsonify({'message': 'user updated successfully',
                         'user': user
                         })
     elif user.role == 'buyer':
-        if 'name' in data:
-            user.name = data.get('name')
+        if 'firt_name' in data:
+            user.first_name = data.get('first_name')
         if 'email' in data:
             user.email = data.get('email')
+        if 'image' in data:
+            file = request.files['image']
+            if file.filename == '':
+                return jsonify({'error': 'No file selected'})
+            if not allowed_file(file.filename):
+                return jsonify({'error': 'Invalid file format'})
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['USER_IMAGE_FOLDER'], filename)
+            file.save(file_path)
+            user.image_url = file_path
         db.session.commit()
         return jsonify({'message': 'user updated successfully',
                         'user': user
@@ -210,7 +238,7 @@ def add_product():
 
     #Securely save the file to the upload directory
     filename = secure_filename(file.filename)
-    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file_path = os.path.join(app.config['PRODUCT_IMAGE_FOLDER'], filename)
     file.save(file_path)
 
     #Store the product details and image url in the database
