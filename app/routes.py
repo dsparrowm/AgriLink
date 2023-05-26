@@ -3,7 +3,7 @@ with the fromtend
 """
 from flask import request, jsonify
 from app import app, db
-from app.models import User, Farmer
+from app.models import User, Farmer, Category
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from werkzeug.utils import secure_filename
@@ -78,9 +78,13 @@ def user_info():
     current_user = get_jwt_identity()
     user = User.query.get(current_user)
     return jsonify({'id': user.id,
-                    'name': user.name,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
                     'email': user.email,
-                    'role': user.role})
+                    'role': user.role,
+                    'phone': user.phone,
+                    'image_url': user.image_url
+                })
 
 @app.route('/updateUserInfo/<int:id>', methods=['PUT'])
 @jwt_required()
@@ -94,22 +98,46 @@ def update_user(id):
         return jsonify({'message': 'User Not Found'}), 404
     if user.role == 'farmer':
         farmer = Farmer.query.filter_by(user_id=user.id).first()
-        if 'name' in data:
-            user.name = data.get('name')
-            farmer.name = data.get('name')
+        if 'first_name' in data:
+            user.first_name = data.get('first_name')
+            farmer.first_name = data.get('first_name')
+        if 'last_name' in data:
+            user.last_name = data.get('last_name')
+            farmer.last_name = data.get('last_name')
         if 'email' in data:
             user.email = data.get('email')
         if 'phone' in data:
+            user.phone = data.get('phone')
             farmer.phone = data.get('phone')
+        if 'image' in data:
+            file = request.files['image']
+            if file.filename == '':
+                return jsonify({'error': 'no file selected'})
+            if not allowed_file(file.filename):
+                return jsonify({'error': 'Invalid file format'})
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['USER_IMAGE_FOLDER'], filename)
+            file.save(file_path)
+            user.image_url = file_path
         db.session.commit()
         return jsonify({'message': 'user updated successfully',
                         'user': user
                         })
     elif user.role == 'buyer':
-        if 'name' in data:
-            user.name = data.get('name')
+        if 'firt_name' in data:
+            user.first_name = data.get('first_name')
         if 'email' in data:
             user.email = data.get('email')
+        if 'image' in data:
+            file = request.files['image']
+            if file.filename == '':
+                return jsonify({'error': 'No file selected'})
+            if not allowed_file(file.filename):
+                return jsonify({'error': 'Invalid file format'})
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['USER_IMAGE_FOLDER'], filename)
+            file.save(file_path)
+            user.image_url = file_path
         db.session.commit()
         return jsonify({'message': 'user updated successfully',
                         'user': user
@@ -140,7 +168,9 @@ def get_category():
     end_index = start_index + per_page
 
     categories = Category.query.get(category)
-    products = Product.query.filter_by(id=categories.id).all()
+    if not categories:
+        return jsonify({'error': 'no products from this category'})
+    products = Product.query.filter_by(category_id=categories.id).all()
     total_items = len(products)
     total_pages = (total_items // per_page) + (1 if total_items % per_page > 0 else 0)
     paginated_products = products[start_index:end_index]
@@ -163,8 +193,13 @@ def get_category():
     return jsonify(response)
 
 @app.route('/product/upload', methods=['POST'])
+@jwt_required
 def add_product():
     """enables a farmer to create and list new products"""
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'user not found'})
     #Check if all required fields are present in the request
     if 'name' not in request.form:
         return jsonify({'error': 'Product name is missing'})
@@ -172,6 +207,10 @@ def add_product():
         return jsonify({'error': 'Product price is missing'})
     if 'quantity' not in request.form:
         return jsonify({'error': 'Product quantity is missing'})
+    if 'category' not in request.form:
+        return jsonify({'error': 'product category is missing'})
+    if 'description' not in request.form:
+        return jsonify({'error': 'product description is missing'})
     if 'image' not in request.files:
         return jsonify({'error': 'No image file provided'})
 
@@ -179,9 +218,19 @@ def add_product():
     name = request.form['name']
     price = int(request.form['price'])
     quantity = int(request.form['quantity'])
+    category = request.form['category']
+    description = request.form['description']
     file = request.files['image']
 
-    #Check if the file exists and is of allowed type
+    #query Category table to get id from it
+    p_category = Category.query.get(category)
+    if not p_category:
+        new_category = Category(name=category)
+        db.session.add(new_category)
+        db.session.commit()
+        p_category = Category.query.get(category)
+
+    #Check if the file exists and is of the allowed type
     if file.filename == '':
         return jsonify({'error': 'No selected file'})
     if not allowed_file(file.filename):
@@ -189,12 +238,14 @@ def add_product():
 
     #Securely save the file to the upload directory
     filename = secure_filename(file.filename)
-    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file_path = os.path.join(app.config['PRODUCT_IMAGE_FOLDER'], filename)
     file.save(file_path)
 
     #Store the product details and image url in the database
     product = Product(name=name, price=price, quantity=quantity,
-                      image_url=file_path)
+                      image_url=file_path, farmer_id=user.id,
+                      category_id=p_category.id,
+                      description=description)
     db.session.add(product)
     db.session.commit()
 

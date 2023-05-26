@@ -14,6 +14,7 @@ class User(db.Model):
     phone = db.Column(db.String(20), nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     role = db.Column(db.String(10), nullable=False)
+    image_url = db.Column(db.String(250), nullable=True)
 
     def __repr__(self):
         return '<User {}>'.format(self.name)
@@ -34,7 +35,7 @@ class Farmer(db.Model):
 
 
 class Category(db.Model):
-    """this class contains columns for categorues of products"""
+    """this class contains columns for categories of products"""
     __tablename__ = "Category"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
