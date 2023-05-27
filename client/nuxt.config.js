@@ -15,7 +15,11 @@ export default {
       { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      {
+        rel: 'stylesheet',
+        href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css'
+      }
     ]
   },
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -26,16 +30,22 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
 
   plugins: [
-    '~/plugins/fontawesome.js'
+    // '~/plugins/fontawesome.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  // buildModules: [
-  //   '@nuxtjs/fontawesome'
-  // ],
+  buildModules: [
+    '@nuxtjs/fontawesome'
+  ],
+  fontawesome: {
+    icons: {
+      solid: true,
+      brands: true
+    }
+  },
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/bootstrap

@@ -1,5 +1,5 @@
 <template>
-  <b-container class="pb-4">
+  <b-container class="pb-4 site-container">
     <b-form class="search-form">
       <label class="sr-only" for="inline-form-input-search">search</label>
       <b-input-group class="mb-2 mr-sm-2 mb-sm-0">
@@ -249,18 +249,15 @@
 export default {
   name: 'ProductListingPage',
   layout: 'default',
-
-  asyncData(context) {
-    return { name: 'AgriLink | Products' };
-  },
-
+  
   head: {
     title: 'AgriLink | Products'
   },
 
   data () {
     return {
-      searchInput: ''
+      searchInput: '',
+      productListing: []
     }
   }
 }
@@ -271,6 +268,7 @@ export default {
   width: 90%;
   margin: 2rem auto;
 }
+
 /* Applies to larger screen sizes */
 @media (min-width: 48.0625em) {
   .search-form {
@@ -278,11 +276,13 @@ export default {
     margin: 3rem auto;
   }
 }
+
 .icon-sm {
   display: inline-block;
   height: 1rem;
   width: 1rem;
 }
+
 .filter, .search {
   display: flex;
   justify-content: center;
