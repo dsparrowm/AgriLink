@@ -3,7 +3,7 @@ with the fromtend
 """
 from flask import request, jsonify
 from app import app, db
-from app.models import User, Farmer, Category
+from app.models import User, Farmer, Category, Product
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from werkzeug.utils import secure_filename
@@ -37,11 +37,12 @@ def register():
     """Handles registration form sent from the frontend
     and stores in the database
     """
-    data = request.get_json()
-    form_name = data.get('name')
-    form_email = data.get('email')
-    form_password = data.get('password')
-    form_role = data.get('role')
+    first_name = request.form.get('first_name')
+    last_name = request.form.get('last_name')
+    form_email = request.form.get('email')
+    form_password = request.form.get('password')
+    form_role = request.form.get('role')
+    form_phone = request.form.get('phone')
     user_exists = User.query.filter_by(email=form_email).first()
     if user_exists:
         return jsonify({'message': 'user already exists'}), 403
@@ -49,14 +50,20 @@ def register():
         form_location = data.get('location')
         form_phone = data.get('phone')
         hashed_password = generate_password_hash(form_password)
-        user = User(name=form_name, email=form_email,
-                    password_harsh=hashed_password)
+        user = User(first_name=first_name,
+                    last_name=last_name,
+                    email=form_email,
+                    password_harsh=hashed_password,
+                    phone=form_phone)
         db.session.add(user)
         #necessary to generate user_id used to create farmer object
         db.session.commit()
 
-        farmer = Farmer(name=form_name,location=form_location,
-                        phone=form_phone, user_id=user.id)
+        farmer = Farmer(first_name=first_name,
+                        last_name=last_name,
+                        location=form_location,
+                        phone=form_phone,
+                        user_id=user.id)
         db.session.add(farmer)
         db.session.commit()
         return jsonify({'message': 'Registration successful'}), 200
@@ -146,6 +153,8 @@ def update_user(id):
 @app.route('/product/<int:id>', methods=['GET'])
 def get_product(id):
     product = Product.query.get(id)
+    if not product:
+        return jsonify({'error': 'no product found'})
     if product:
         product_data = {
                 'id': product.id,
@@ -192,8 +201,60 @@ def get_category():
         }
     return jsonify(response)
 
+@app.route('/product/<int:id>/update', methods=['PUT'])
+@jwt_required()
+def update_product(id):
+    """enables farmers to update the details of their products"""
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'user not found'})
+    product = Product.query.get(id)
+    if not product:
+        return jsonify({'error': 'product not found'})
+    if 'name' not in request.form:
+        return jsonify({'error': 'product name is missing'})
+    if 'price' not in request.form:
+        return jsonify({'error': 'product price is missing'})
+    if 'quantity' not in request.form:
+        return jsonify({'error': 'product quantity is missing'})
+    if 'category' not in request.form:
+        return jsonify({'error': 'product category is missing'})
+    if 'description' not in request.form:
+        return jsonify({'error': 'product description is missing'})
+    if 'image' not in request.files:
+        return jsonify({'error': 'no image file provided'})
+    name = request.form['name']
+    price = request.form['price']
+    quantity = request.form['quantity']
+    category = request.form['category']
+    description = request.form['description']
+    file = request.files['image']
+
+    #check that the image exists and file format is correct
+    if file.filename == '':
+        return jsonify({'error': 'no file selected'})
+    if not allowed_file(file.filename):
+        return jsonify({'error': 'Invalid file format'})
+    filename = secure_filename(file.filename)
+    file_path = os.path.join(app.config['PRODUCT_IMAGE_FOLDER'], filename)
+    if product.image_url != file_path:
+        file.save(file_path)
+        product.image_url = file_path
+    if name != product.name:
+        product.name = name
+    if price != product.price:
+        product.price = price
+    if quantity != product.quantity:
+        product.quantity = quantity
+    if description != product.description:
+        product.description = description
+
+    db.session.commit()
+    return jsonify({'message': 'product updated successfully'})
+
 @app.route('/product/upload', methods=['POST'])
-@jwt_required
+@jwt_required()
 def add_product():
     """enables a farmer to create and list new products"""
     user_id = get_jwt_identity()

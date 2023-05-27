@@ -44,7 +44,7 @@ class Category(db.Model):
         return "Category {}".format(self.name)
 
 
-class Pruduct(db.Model):
+class Product(db.Model):
     """this class handles the products table"""
     __tablename__ = "Product"
     id = db.Column(db.Integer, primary_key=True)
