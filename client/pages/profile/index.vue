@@ -93,7 +93,7 @@ import UserInfoUpdateInput from '~/components/UserInfoUpdate/UserInfoUpdateInput
 import UserInfoUpdateForm from '~/components/UserInfoUpdate/UserInfoUpdateForm.vue';
 export default {
   name: 'ProfilePage',
-  layout: 'default',
+  layout: 'main',
   components: {
     UserInfoUpdateInput,
     UserInfoUpdateForm

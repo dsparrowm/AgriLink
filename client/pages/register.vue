@@ -144,7 +144,7 @@
 import { mapMutations, mapActions } from 'vuex';
 export default {
   name: 'RegisterPage',
-  layout: 'default',
+  layout: 'main',
 
   head: {
     title: 'AgriLink | Register'

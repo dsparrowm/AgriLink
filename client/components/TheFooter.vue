@@ -31,24 +31,26 @@
                 </p>
                 <div class="d-flex">
                     <p class="social-media-icons">
-                        <span class="icon-md ">
+                        <a href="https://web.facebook.com/login.php/"
+                        class="icon-md">
                             <font-awesome-icon :icon="['fab', 'facebook']"/>
-                        </span>
+                        </a>
                     </p>
                     <p class="social-media-icons">
-                        <span class="icon-md">
+                        <a href="https://twitter.com/" class="icon-md">
                             <font-awesome-icon :icon="['fab', 'twitter']"/>
-                        </span>
+                        </a>
                     </p>
                     <p class="social-media-icons">
-                        <span class="icon-md">
+                        <a href="https://www.instagram.com/"
+                        class="icon-md">
                             <font-awesome-icon :icon="['fab', 'instagram']"/>
-                        </span>
+                        </a>
                     </p>
                     <p class="social-media-icons">
-                        <span class="icon-md">
+                        <a href="https://www.linkedin.com/" class="icon-md">
                             <font-awesome-icon :icon="['fab', 'linkedin']"/>
-                        </span>
+                        </a>
                     </p>
                 </div>
             </div>
@@ -292,13 +294,22 @@ export default {
         text-align: center;
         padding: .5rem 0;
         margin-right: 1rem;
+        cursor: pointer;
+    }
+    .social-media-icons:hover {
+        background-color: var(--clr-ntrl-min);
     }
     .icon-md  {
+        color: inherit;
         display: inline-block;
         height: 50px;
         width: 50px;
         font-size: 1.5rem;
         margin: auto 0;
+    }
+
+    .icon-md:hover {
+        color: var(--clr-base-dk);
     }
     .form__input {
         border-radius: 20px;

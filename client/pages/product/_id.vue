@@ -57,6 +57,8 @@
 
 <script>
 export default {
+  name: 'ProductDetails',
+  layout: 'main',
   head:{
     title: 'AgriLink | Detail'
   },

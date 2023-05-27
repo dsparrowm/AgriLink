@@ -79,6 +79,15 @@
             </li>
             <li
             class="menu__item"
+            :class="{'menu__item--active': currentPage === 'dashboard'}">
+                <NuxtLink
+                to="/dashboard"
+                class="menu__link pages-links">
+                    Dashboard
+                </NuxtLink>
+            </li>
+            <li
+            class="menu__item"
             :class="{'menu__item--active': currentPage === 'about'}">
                 <NuxtLink
                 to="/about"

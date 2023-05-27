@@ -11,7 +11,7 @@
 import { mapMutations, mapActions } from 'vuex';
 export default {
   name: 'IndexPage',
-  layout: 'default',
+  layout: 'main',
 
   head:{
     title: 'AgriLink | Home'

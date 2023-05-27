@@ -80,7 +80,7 @@
 import { mapMutations, mapActions } from 'vuex';
 export default {
     name: 'LoginPage',
-    layout: 'default',
+    layout: 'main',
 
     head:{
         title: 'AgriLink | Login'

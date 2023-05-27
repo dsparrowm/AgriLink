@@ -248,8 +248,8 @@
 <script>
 export default {
   name: 'ProductListingPage',
-  layout: 'default',
-  
+  layout: 'main',
+
   head: {
     title: 'AgriLink | Products'
   },
