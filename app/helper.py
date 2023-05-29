@@ -1,4 +1,5 @@
 from config import Config
+from app import app
 
 def allowed_file(filename):
     return '.' in filename and \

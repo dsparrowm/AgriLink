@@ -8,7 +8,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from werkzeug.utils import secure_filename
 from app.helper import allowed_file
-
+from config import Config
+import os
 
 @app.route('/status', methods=['GET'])
 def status():
@@ -20,9 +21,8 @@ def login():
     """checks if user is valid and found in the database
     then creates a jwt token for that user and returns a 
     response to the client containing the the user token"""
-    data = request.get_json()
-    form_email = data.get('email')
-    form_password = data.get('password')
+    form_email = request.form.get('email')
+    form_password = request.form.get('password')
     user = User.query.filter_by(email=form_email).first()
     if user is None or check_password_hash(user.password_hash, form_password) != True:
         return jsonify({'message': 'Invalid email or password'}), 401
@@ -47,8 +47,8 @@ def register():
     if user_exists:
         return jsonify({'message': 'user already exists'}), 403
     if form_role == 'farmer':
-        form_location = data.get('location')
-        form_phone = data.get('phone')
+        form_location = request.form.get('location')
+        form_phone = request.form.get('phone')
         hashed_password = generate_password_hash(form_password)
         user = User(first_name=first_name,
                     last_name=last_name,
@@ -69,10 +69,12 @@ def register():
         return jsonify({'message': 'Registration successful'}), 200
     elif form_role == 'buyer':
         hashed_password = generate_password_hash(form_password)
-        user = User(name=form_name,
+        user = User(first_name=first_name,
                     email=form_email,
+                    last_name=last_name,
                     role=form_role,
-                    password_hash=hashed_password)
+                    password_hash=hashed_password,
+                    phone=form_phone)
         db.session.add(user)
         db.session.commit()
         return jsonify({'message': 'Registration successful'}), 200
@@ -93,30 +95,29 @@ def user_info():
                     'image_url': user.image_url
                 })
 
-@app.route('/updateUserInfo/<int:id>', methods=['PUT'])
+@app.route('/updateUserInfo/<int:id>', methods=['POST'])
 @jwt_required()
 def update_user(id):
     current_user = get_jwt_identity()
     if current_user != id:
         return jsonify({'message': 'Unauthorized'}), 401
-    data = request.get_json()
     user = User.query.get(id)
     if not user:
         return jsonify({'message': 'User Not Found'}), 404
     if user.role == 'farmer':
         farmer = Farmer.query.filter_by(user_id=user.id).first()
-        if 'first_name' in data:
-            user.first_name = data.get('first_name')
-            farmer.first_name = data.get('first_name')
-        if 'last_name' in data:
-            user.last_name = data.get('last_name')
-            farmer.last_name = data.get('last_name')
-        if 'email' in data:
-            user.email = data.get('email')
-        if 'phone' in data:
-            user.phone = data.get('phone')
-            farmer.phone = data.get('phone')
-        if 'image' in data:
+        if 'first_name' in request.form:
+            user.first_name = request.form.get('first_name')
+            farmer.first_name = request.form.get('first_name')
+        if 'last_name' in request.form:
+            user.last_name = request.form.get('last_name')
+            farmer.last_name = request.form.get('last_name')
+        if 'email' in request.form:
+            user.email = request.form.get('email')
+        if 'phone' in request.form:
+            user.phone = request.form.get('phone')
+            farmer.phone = request.form.get('phone')
+        if 'image' in request.files:
             file = request.files['image']
             if file.filename == '':
                 return jsonify({'error': 'no file selected'})
@@ -126,16 +127,16 @@ def update_user(id):
             file_path = os.path.join(app.config['USER_IMAGE_FOLDER'], filename)
             file.save(file_path)
             user.image_url = file_path
-        db.session.commit()
-        return jsonify({'message': 'user updated successfully',
-                        'user': user
-                        })
+        
+        return jsonify({'message': 'user updated successfully'})
     elif user.role == 'buyer':
-        if 'firt_name' in data:
-            user.first_name = data.get('first_name')
-        if 'email' in data:
-            user.email = data.get('email')
-        if 'image' in data:
+        if 'first_name' in request.form:
+            user.first_name = request.form.get('first_name')
+        if 'last_name' in request.form:
+            user.last_name = request.form.get('last_name')
+        if 'email' in request.form:
+            user.email = request.form.get('email')
+        if 'image' in request.files:
             file = request.files['image']
             if file.filename == '':
                 return jsonify({'error': 'No file selected'})
@@ -145,23 +146,25 @@ def update_user(id):
             file_path = os.path.join(app.config['USER_IMAGE_FOLDER'], filename)
             file.save(file_path)
             user.image_url = file_path
+    
         db.session.commit()
-        return jsonify({'message': 'user updated successfully',
-                        'user': user
-                        })
+        return jsonify({'message': 'user updated successfully'})
 
 @app.route('/product/<int:id>', methods=['GET'])
 def get_product(id):
     product = Product.query.get(id)
     if not product:
         return jsonify({'error': 'no product found'})
+    category = Category.query.get(product.category_id)
     if product:
         product_data = {
                 'id': product.id,
                 'name': product.name,
                 'price': product.price,
                 'quantity': product.quantity,
-                'image_url': product.image_url
+                'image_url': product.image_url,
+                'category': category.name,
+                'category_id': category.id
         }
         return jsonify(product_data)
     else:
@@ -176,10 +179,10 @@ def get_category():
     start_index = (page - 1) * per_page
     end_index = start_index + per_page
 
-    categories = Category.query.get(category)
+    categories = Category.query.filter_by(name=category).first()
     if not categories:
         return jsonify({'error': 'no products from this category'})
-    products = Product.query.filter_by(category_id=categories.id).all()
+    products = Product.query.filter(Product.category_id == categories.id).all()
     total_items = len(products)
     total_pages = (total_items // per_page) + (1 if total_items % per_page > 0 else 0)
     paginated_products = products[start_index:end_index]
@@ -205,8 +208,10 @@ def get_category():
 @jwt_required()
 def update_product(id):
     """enables farmers to update the details of their products"""
-    user_id = get_jwt_identity()
-    user = User.query.get(user_id)
+    current_user = get_jwt_identity()
+    if current_user != id:
+        return jsonify({'message': 'Unauthorized'})
+    user = User.query.get(current_user)
     if not user:
         return jsonify({'error': 'user not found'})
     product = Product.query.get(id)
@@ -284,13 +289,11 @@ def add_product():
     file = request.files['image']
 
     #query Category table to get id from it
-    p_category = Category.query.get(category)
+    p_category = Category.query.filter_by(name=category).first()
     if not p_category:
-        new_category = Category(name=category)
-        db.session.add(new_category)
+        p_category = Category(name=category)
+        db.session.add(p_category)
         db.session.commit()
-        p_category = Category.query.get(category)
-
     #Check if the file exists and is of the allowed type
     if file.filename == '':
         return jsonify({'error': 'No selected file'})
@@ -310,4 +313,18 @@ def add_product():
     db.session.add(product)
     db.session.commit()
 
-    return jsonify({'message': 'Product uploaded successfully'})
+    return jsonify({'message': 'Product uploaded successfully',
+                    'product_name': product.name,
+                    'category': p_category.name,
+                    'price': product.price
+                })
+@app.route('/product/<int:id>/delete', methods=['DELETE'])
+@jwt_required()
+def delete_product(id):
+    current_user = get_jwt_identity()
+    if current_user != id:
+        return jsonify({'error': 'Unauthorized'})
+    product = Product.query.get(id)
+    db.session.delete(product)
+    db.session.commit()
+    return jsonify({'message': 'product deleted successfully'})

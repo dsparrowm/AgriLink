@@ -38,7 +38,7 @@ class Category(db.Model):
     """this class contains columns for categories of products"""
     __tablename__ = "Category"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
+    name = db.Column(db.String(50), unique=True, nullable=False)
 
     def __repr__(self):
         return "Category {}".format(self.name)
