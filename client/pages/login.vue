@@ -1,8 +1,7 @@
 <template>
   <div class="container">
     <template
-    v-if="success
-    && iscountDownEnded">
+    v-if="loginSuccess">
       <b-alert
       :show="dismissCountDown"
       variant="success"
@@ -13,8 +12,7 @@
     </template>
 
     <template
-    v-if="error
-    && iscountDownEnded">
+    v-if="loginError">
       <b-alert
       :show="dismissCountDown"
       variant="danger"
@@ -68,7 +66,11 @@
             Forgot Password
         </NuxtLink>
         <div class="form__group">
-            <button class="btn from__submit" type="submit">Sign In</button>
+            <button
+            class="btn from__submit"
+            type="submit">
+                Sign In
+            </button>
         </div>
     </form>
   </div>
@@ -78,11 +80,16 @@
 import { mapMutations, mapActions } from 'vuex';
 export default {
     name: 'LoginPage',
-    layout: 'default',
+    layout: 'main',
+
+    head:{
+        title: 'AgriLink | Login'
+    },
+  
     data () {
         return {
-            error: false,
-            success: false,
+            dismissCountDown: 5,
+            isLoginSuccessful: null,
             message: '',
             formData: {
                 email: '',
@@ -90,14 +97,22 @@ export default {
             },
         }
     },
+    computed: {
+        loginSuccess () {
+            return this.isLoginSuccessful;
+        },
+        loginError () {
+            return this.isLoginSuccessful === false;
+        }
+    },
     methods: {
         ...mapActions({
             login: 'login'
         }),
-        countDownChanged(dismissCountDown) {
+        countDownChanged (dismissCountDown) {
           this.dismissCountDown = dismissCountDown;
         },
-        showAlert() {
+        showAlert () {
            this.dismissCountDown = this.dismissSecs;
         },
         async loginUser () {
@@ -108,19 +123,24 @@ export default {
                         password: this.formData.password
                     },
                 });
-
+                
+                // console.log(res, "lefdgupewio");
                 if (res) {
-                    console.log(res);
+                    // console.log(res);
                     this.message = res.message;
-                    this.success = true;
-                    await this.$router.push('/profile')
+                    this.isLoginSuccessful = true;
+                    // await this.$router.push('/profile')
                 }
             } catch (error) {
-                this.message = error.message;
-                this.error = true;
-                console.error(error);
+                this.message = 'Invalid email or password';
+                this.isLoginSuccessful = false;
+                console.error(error.message);
+                this.dismissCountDown = 5;
             }
         },
+    },
+    mounted () {
+        // this.isLoginSuccessful = true;
     }
 }
 </script>

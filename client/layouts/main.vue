@@ -1,8 +1,8 @@
 <template>
     <div>
-    <TheHeader />
+    <TheHeader></TheHeader>
     <Nuxt />
-    <TheFooter />
+    <TheFooter></TheFooter>
   </div>
 </template>
 
@@ -10,6 +10,7 @@
 import cssVars from '~/utils/cssVariables.json';
 
 export default {
+  name: 'DefaultLayout'
 
     // mounted: function(){
     //     console.log(cssVars);

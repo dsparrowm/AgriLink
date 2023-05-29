@@ -7,13 +7,14 @@
         :name="inputName"
         v-model="inputData"
         :placeholder="'update ' + inputName"
+        required
         >
       </div>
 </template>
 
 <script>
-import { watch } from 'vue'
 export default {
+  name: 'UserInfoUpdateInput',
   props: {
     inputType: {
       type: String,

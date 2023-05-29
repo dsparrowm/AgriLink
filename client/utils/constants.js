@@ -2,25 +2,25 @@
 export const APP_PAGES = [
   {
     ID: 0,
-    name: 'HOME',
+    name: 'home',
     url: '/',
     isActive: false
   },
   {
     ID: 1,
-    name: 'PRODUCTS',
-    url: '/product',
+    name: 'products',
+    url: '/products',
     isActive: false
   },
   {
     ID: 2,
-    name: 'ABOUT',
+    name: 'about',
     url: '/about',
     isActive: false
   },
   {
     ID: 3,
-    name: 'SUPPORT',
+    name: 'support',
     url: '/support',
     isActive: false
   }

@@ -9,7 +9,9 @@
           <label for="filePicker">
             <span 
             class="d-flex align-items-center justify-content-center">
-              <span class="pr-1 pl-1 py-1 border-right border-dark">Upload Photo</span>
+              <span class="pr-1 pl-1 py-1 border-right border-dark">
+                Upload Photo
+              </span>
               <span class="icon-sm p-1">
                 <font-awesome-icon icon="upload"/>
               </span>
@@ -31,7 +33,7 @@
             @click="showForm('name')">EDIT</button>
           </article>
         </div>
-        <div
+        <!-- <div
         class="user-details__item">
           <h5>Address</h5>
           <article class="user-details__info">
@@ -39,7 +41,7 @@
             <button class="btn user-details__btn"
             @click="showForm('address')">EDIT</button>
           </article>
-        </div>
+        </div> -->
         <div
         class="user-details__item">
           <h5>Email</h5>
@@ -49,7 +51,7 @@
             @click="showForm('email', 'email')">EDIT</button>
           </article>
         </div>
-        <div
+        <!-- <div
         class="user-details__item">
           <h5>Phone</h5>
           <article class="user-details__info">
@@ -57,8 +59,9 @@
             <button class="btn user-details__btn"
             @click="showForm('phone')">EDIT</button>
           </article>
-        </div>
+        </div> -->
       </div>
+      <!-- {{ userObj }} -->
       <button class="btn profile__trans">
         View Transaction History
       </button>
@@ -81,26 +84,30 @@
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import {
+  mapMutations,
+  mapActions,
+  mapGetters
+} from 'vuex';
 import UserInfoUpdateInput from '~/components/UserInfoUpdate/UserInfoUpdateInput.vue';
 import UserInfoUpdateForm from '~/components/UserInfoUpdate/UserInfoUpdateForm.vue';
 export default {
   name: 'ProfilePage',
-  layout: 'default',
+  layout: 'main',
   components: {
     UserInfoUpdateInput,
     UserInfoUpdateForm
   },
-  // middleware: ['auth'],
+  middleware: ['auth'],
   data () {
     return {
       showUpdateForm: false,
-      userObj: {
-        name: 'John Doe',
-        address: 'NO. 5 demo street Lagos',
-        email: 'Johndeo.gmail.com',
-        phone: '+123 816 805 0011'
-      },
+      // userObj: {
+      //   name: 'John Doe',
+      //   address: 'NO. 5 demo street Lagos',
+      //   email: 'Johndeo.gmail.com',
+      //   phone: '+123 816 805 0011'
+      // },
       inputData: '',
       payload: {},
       selectedKey: '',
@@ -108,6 +115,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      userObj: 'loggedInUser'
+    }),
     isFullName () {
       return this.lastNameFeilds !== '';
     }
@@ -176,14 +186,14 @@ export default {
 
 .upload-img__file label {
   cursor: pointer;
+  font-size: 15px;
+}
+.d-flex {
   background-color: #e9ecef;
   color: #495057;
   border: 1px solid #495057;
-  border-radius: 5px;
-  display: inline-block;
-  font-size: 15px;
+  border-radius: 3px;
 }
-
 .upload-img__file input {
   display: none;
 }

@@ -144,7 +144,12 @@
 import { mapMutations, mapActions } from 'vuex';
 export default {
   name: 'RegisterPage',
-  layout: 'default',
+  layout: 'main',
+
+  head: {
+    title: 'AgriLink | Register'
+  },
+
   data () {
     return {
       dismissSecs: 5,
@@ -200,7 +205,7 @@ export default {
           console.log(user, res);
           this.message = res.message;
           this.success = true;
-          await this.$router.push('/profile');
+          // await this.$router.push('/profile');
         }
 
       } catch (error) {
@@ -211,7 +216,7 @@ export default {
     },
   },
   mounted () {
-    // console.log(this.$auth)
+    console.log(this.$auth)
     // this.showAlert();
   }
 }

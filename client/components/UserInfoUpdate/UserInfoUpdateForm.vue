@@ -17,6 +17,7 @@
 
 <script>
 export default {
+  name: 'UserInfoUpdateForm',
   methods: {
     submitForm () {
       this.$emit('update');
