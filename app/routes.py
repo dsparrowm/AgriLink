@@ -43,32 +43,28 @@ def register():
     form_password = request.form.get('password')
     form_role = request.form.get('role')
     form_phone = request.form.get('phone')
+    if 'location' in request.form:
+        location = request.form.get('location')
     user_exists = User.query.filter_by(email=form_email).first()
     if user_exists:
         return jsonify({'message': 'user already exists'}), 403
+    hashed_password = generate_password_hash(form_password)
     if form_role == 'farmer':
-        form_location = request.form.get('location')
-        form_phone = request.form.get('phone')
-        hashed_password = generate_password_hash(form_password)
         user = User(first_name=first_name,
                     last_name=last_name,
                     email=form_email,
-                    password_harsh=hashed_password,
+                    password_hash=hashed_password,
+                    role=form_role,
                     phone=form_phone)
         db.session.add(user)
         #necessary to generate user_id used to create farmer object
         db.session.commit()
 
-        farmer = Farmer(first_name=first_name,
-                        last_name=last_name,
-                        location=form_location,
-                        phone=form_phone,
-                        user_id=user.id)
+        farmer = Farmer(location=location, user_id=user.id)
         db.session.add(farmer)
         db.session.commit()
         return jsonify({'message': 'Registration successful'}), 200
     elif form_role == 'buyer':
-        hashed_password = generate_password_hash(form_password)
         user = User(first_name=first_name,
                     email=form_email,
                     last_name=last_name,
@@ -92,6 +88,7 @@ def user_info():
                     'email': user.email,
                     'role': user.role,
                     'phone': user.phone,
+                    'role': user.role,
                     'image_url': user.image_url
                 })
 
@@ -108,15 +105,14 @@ def update_user(id):
         farmer = Farmer.query.filter_by(user_id=user.id).first()
         if 'first_name' in request.form:
             user.first_name = request.form.get('first_name')
-            farmer.first_name = request.form.get('first_name')
         if 'last_name' in request.form:
             user.last_name = request.form.get('last_name')
-            farmer.last_name = request.form.get('last_name')
         if 'email' in request.form:
             user.email = request.form.get('email')
         if 'phone' in request.form:
             user.phone = request.form.get('phone')
-            farmer.phone = request.form.get('phone')
+        if 'location' in request.form:
+            farmer.location = request.form.get('location')
         if 'image' in request.files:
             file = request.files['image']
             if file.filename == '':
@@ -328,3 +324,41 @@ def delete_product(id):
     db.session.delete(product)
     db.session.commit()
     return jsonify({'message': 'product deleted successfully'})
+
+@app.route('/user/products', methods=['GET'])
+@jwt_required()
+def user_products():
+    current_user = get_jwt_identity()
+    user = User.query.get(current_user)
+    if not user:
+        return jsonify({'error': 'user not found'})
+    farmer = Farmer.query.filter_by(user_id=user.id)
+    if not farmer:
+        return jsonify({'error': 'Unauthorized'})
+    page = int(request.args.get('page', 1))
+    per_page = int(request.args.get('per_page', 10))
+
+    start_index = (page - 1) * per_page
+    end_index = start_index + per_page
+
+    products = Product.query.filter_by(farmer_id=user.id).all()
+    total_items = len(products)
+    total_pages = (total_items // per_page) + (1 if total_items % per_page > 0 else 0)
+    paginated_products = products[start_index:end_index]
+    response = {
+            'products': [
+                {
+                    'id': product.id,
+                    'name': product.name,
+                    'price': product.price,
+                    'quantity': product.quantity,
+                    'image_url': product.image_url
+                }
+                for product in paginated_products
+            ],
+            'page': page,
+            'per_page': per_page,
+            'total_items': total_items,
+            'total_pages': total_pages
+        }
+    return jsonify(response)
