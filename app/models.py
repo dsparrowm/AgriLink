@@ -25,10 +25,7 @@ class Farmer(db.Model):
     __tablename__ = "Farmer"
     id = db.Column(db.Integer, primary_key=True)
     location = db.Column(db.String, nullable=True)
-    first_name = db.Column(db.String(50), nullable=False)
-    last_name = db.Column(db.String(50), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('User.id'))
-    phone = db.Column(db.String(40), nullable=True)
 
     def __repr__(self):
         return "<Farmer {}>".format(self.name)
@@ -38,7 +35,7 @@ class Category(db.Model):
     """this class contains columns for categories of products"""
     __tablename__ = "Category"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
+    name = db.Column(db.String(50), unique=True, nullable=False)
 
     def __repr__(self):
         return "Category {}".format(self.name)
