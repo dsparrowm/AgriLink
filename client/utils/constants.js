@@ -25,3 +25,9 @@ export const APP_PAGES = [
     isActive: false
   }
 ];
+
+export const PRODUCTS_CATEGORIES = [
+  { value: 'a', text: 'Grains' },
+  { value: 'b', text: 'Live stock' },
+  { value: 'c', text: 'Vegitable' }
+];
