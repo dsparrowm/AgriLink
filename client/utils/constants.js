@@ -27,7 +27,7 @@ export const APP_PAGES = [
 ];
 
 export const PRODUCTS_CATEGORIES = [
-  { value: 'a', text: 'Grains' },
-  { value: 'b', text: 'Live stock' },
-  { value: 'c', text: 'Vegitable' }
+  { value: 'Grains', text: 'Grains' },
+  { value: 'Live stock', text: 'Live stock' },
+  { value: 'Vegitable', text: 'Vegitable' }
 ];

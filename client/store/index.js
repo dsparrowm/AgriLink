@@ -21,27 +21,34 @@ export const actions = {
       });
   },
 
-  async login (commit, payload) {
+  // async login (commit, payload) {
+  //   const form = new FormData();
+  //   // console.log(form, 'newform');
+  //   return await this.$axios
+  //     .post('/login', form)
+  //     .then(res => {
+  //       return res.data;
+  //     })
+  //     .catch(err => {
+  //       return err;
+  //     });
+  // },
+
+  async register (commit, payload) {
+    const form = new FormData();
+    for (const field in payload) {
+      form.append(field, payload[field]);
+    }
     return await this.$axios
-      .post('/login', payload)
+      .post('/register', form)
       .then(res => {
-        return res.data;
+        return res;
       })
       .catch(err => {
         return err;
       });
   },
 
-  async register (commit, payload) {
-    return await this.$axios
-      .post('/register', payload)
-      .then(res => {
-        return res.data;
-      })
-      .catch(err => {
-        return err;
-      });
-  },
   async updateUserInfo (commit, payload) {
     const { ID, ...data } = payload;
     return await this.$axios

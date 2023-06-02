@@ -1,28 +1,6 @@
 <template>
   <div class="container">
-    <template
-    v-if="loginSuccess">
-      <b-alert
-      :show="dismissCountDown"
-      variant="success"
-      @dismissed="dismissCountDown=0"
-      @dismiss-count-down="countDownChanged"
-      fade
-      dismissible>{{ message }}</b-alert>
-    </template>
-
-    <template
-    v-if="loginError">
-      <b-alert
-      :show="dismissCountDown"
-      variant="danger"
-      @dismissed="dismissCountDown=0"
-      @dismiss-count-down="countDownChanged"
-      fade
-      dismissible>{{ message }}</b-alert>
-    </template>
-
-      <form
+    <form
       class="login-form"
       @submit.prevent="loginUser"
       >
@@ -73,12 +51,19 @@
             </button>
         </div>
     </form>
+    <message-alert
+    @resetAlertType="resetAlertType"
+    :alertType="alertType"
+    :message="alertMessage">
+    </message-alert>
   </div>
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
+import MessageAlert from '../components/Modals/MessageAlert.vue';
 export default {
+  components: { MessageAlert },
     name: 'LoginPage',
     layout: 'main',
 
@@ -88,59 +73,53 @@ export default {
   
     data () {
         return {
-            dismissCountDown: 5,
-            isLoginSuccessful: null,
-            message: '',
+            alertType: '',
+            alertMessage: '',
             formData: {
                 email: '',
                 password: ''
             },
         }
     },
-    computed: {
-        loginSuccess () {
-            return this.isLoginSuccessful;
-        },
-        loginError () {
-            return this.isLoginSuccessful === false;
+    watch: {
+        loggedInUser (user) {
+            if (user.role === 'farmer') {
+                this.$router.push('/dashboard');
+            } else {
+                this.$router.push('/products');
+            }
         }
     },
-    methods: {
-        ...mapActions({
-            login: 'login'
+    computed: {
+        ...mapGetters({
+            loggedInUser: 'loggedInUser'
         }),
-        countDownChanged (dismissCountDown) {
-          this.dismissCountDown = dismissCountDown;
+    },
+    methods: {
+        resetAlertType () {
+            this.alertType = '';
         },
-        showAlert () {
-           this.dismissCountDown = this.dismissSecs;
-        },
+
         async loginUser () {
             try{
+                const form = new FormData();
+                form.append('email', this.formData['email']);
+                form.append('password', this.formData['password']);
                 const res = await  this.$auth.loginWith('local', {
-                    data: {
-                        email: this.formData.email,
-                        password: this.formData.password
-                    },
+                    data: form,
                 });
-                
-                // console.log(res, "lefdgupewio");
+
                 if (res) {
-                    // console.log(res);
-                    this.message = res.message;
-                    this.isLoginSuccessful = true;
-                    // await this.$router.push('/profile')
+                    this.alertMessage = res.message;
+                    this.alertType = 'success';
+                    this.dismissCountDown = 5;
                 }
             } catch (error) {
-                this.message = 'Invalid email or password';
-                this.isLoginSuccessful = false;
-                console.error(error.message);
-                this.dismissCountDown = 5;
+                this.alertMessage = 'Invalid email or password';
+                this.alertType = 'danger';
+                console.error(error)
             }
         },
-    },
-    mounted () {
-        // this.isLoginSuccessful = true;
     }
 }
 </script>

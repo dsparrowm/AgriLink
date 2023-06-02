@@ -47,32 +47,14 @@
                 role="list"
                 class="sub-menu products-categories"
                 :class="{'sub-menu--active': showSubMenu}">
-                    <li class="sub-menu__item">
+                    <li
+                    v-for="(category, i) in categories"
+                    :key="i"
+                    class="sub-menu__item">
                         <NuxtLink
-                        to="/products"
+                        :to="`/products/?category=${category.text}`"
                         class="sub-pages-links">
-                        Vergitables
-                        </NuxtLink>
-                    </li>
-                    <li class="sub-menu__item">
-                        <NuxtLink
-                        to="#"
-                        class="sub-pages-links">
-                        Vergitables
-                        </NuxtLink>
-                    </li>
-                    <li class="sub-menu__item">
-                        <NuxtLink
-                        to="#"
-                        class="sub-pages-links">
-                        Vergitables
-                        </NuxtLink>
-                    </li>
-                    <li class="sub-menu__item">
-                        <NuxtLink
-                        to="#"
-                        class="sub-pages-links">
-                        Vergitables
+                        {{ category.text }}
                         </NuxtLink>
                     </li>
                 </ul>
@@ -140,15 +122,15 @@
 </template>
 
 <script>
-import { APP_PAGES } from '../utils/constants';
+import { PRODUCTS_CATEGORIES } from '../utils/constants';
 import { mapGetters } from 'vuex';
 export default {
     name: 'AppHeader',
     data () {
         return {
+            categories: PRODUCTS_CATEGORIES,
             showMenu: false,
             showSubMenu: false,
-            pages: APP_PAGES,
             activePage: 'index'
         }
     },

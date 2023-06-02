@@ -1,56 +1,31 @@
 <template>
   <div class="container">
-    <template
-    v-if="success
-    && iscountDownEnded">
-      <b-alert
-      :show="dismissCountDown"
-      variant="success"
-      @dismissed="dismissCountDown=0"
-      @dismiss-count-down="countDownChanged"
-      fade
-      dismissible>{{ message }}</b-alert>
-    </template>
-
-    <template
-    v-if="error
-    && iscountDownEnded">
-      <b-alert
-      :show="dismissCountDown"
-      variant="danger"
-      @dismissed="dismissCountDown=0"
-      @dismiss-count-down="countDownChanged"
-      fade
-      dismissible>{{ message }}</b-alert>
-    </template>
-
     <h2 class="text-center">SIGN UP</h2>
-
     <form
     class="signup-form"
     @submit.prevent="registerUser">
-    <!-- <div class="form__group">
+    <div class="form__group">
       <label for="fname" class="input-label">
-          First Name *
+        First Name *
       </label>            
       <input
       id="fname"
       class="form__input"
       type="text"
       placeholder="First Name"
-      v-model="formData.firstName"
+      v-model="formData.first_name"
       required>
-    </div> -->
+    </div>
     <div class="form__group">
       <label for="lname" class="input-label">
-          Name *
+        Last Name *
       </label>            
       <input
       id="lname"
       class="form__input"
       type="text"
-      placeholder="Name"
-      v-model="formData.name"
+      placeholder="Last Name"
+      v-model="formData.last_name"
       required>
     </div>
     <div class="form__group">
@@ -66,6 +41,18 @@
       required>
     </div>
     <div class="form__group">
+      <label for="phone" class="input-label">
+        Phone Number
+      </label>            
+      <input
+      id="phone"
+      class="form__input"
+      type="text"
+      placeholder="Phone Number"
+      v-model="formData.phone"
+      required>
+    </div>
+    <div class="form__group">
       <label for="pwd-input" class="input-label">
         Password *
       </label>            
@@ -77,7 +64,7 @@
       v-model="formData.password"
       required>
     </div>
-    <!-- <div class="form__group">
+    <div class="form__group">
       <label for="cpwd" class="input-label">
         Confirm Password *
       </label>
@@ -88,7 +75,7 @@
       placeholder="Password"
       v-model="formData.confirmPassword"
       required>
-    </div> -->
+    </div>
     <div class="form__group userTypes">
       <h5>Please select a role</h5>
       <input
@@ -110,7 +97,7 @@
     <template v-if="isFarmer">
       <div class="form__group location">
         <label for="location-input" class="input-label">
-            Farm Location
+          Farm Location
         </label>            
         <input
         id="location-input"
@@ -119,30 +106,25 @@
         placeholder="Location"
         v-model="formData.location"
         required>
-      </div>   
-      <div class="form__group">
-        <label for="phone" class="input-label">
-          Phone Number
-        </label>            
-        <input
-        id="phone"
-        class="form__input"
-        type="text"
-        placeholder="Phone Number"
-        v-model="formData.phoneNumber"
-        required>
       </div>
     </template>
     <div class="form__group">
         <button class="btn from__submit" type="submit">Sign Up</button>
     </div>
     </form>
+    <message-alert
+    @resetAlertType="resetAlertType"
+    :alertType="alertType"
+    :message="alertMessage">
+    </message-alert>
   </div>
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
+import MessageAlert from '../components/Modals/MessageAlert.vue';
 export default {
+  components: { MessageAlert },
   name: 'RegisterPage',
   layout: 'main',
 
@@ -152,72 +134,98 @@ export default {
 
   data () {
     return {
-      dismissSecs: 5,
-      dismissCountDown: 0,
+      alertType: '',
+      alertMessage: '',
       formData: {
-        name: '',
-        // lastName: '',
+        first_name: '',
+        last_name: '',
         email: '',
-        // phoneNumber: '',
+        phone: '',
         password: '',
-        // confirmPassword: '',
+        confirmPassword: '',
         role: '',
-        // location: ''
+        location: ''
       },
       isFarmer: false,
-      message: '',
-      error: false,
-      success: false
     }
   },
   computed: {
-    iscountDownEnded () {
-      return this.dismissCountDown > 0;
+    ...mapGetters({
+        loggedInUser: 'loggedInUser'
+    }),
+
+    registerSuccess () {
+      return this.isRegisterationSuccessful;
+    },
+
+    registerError () {
+      return this.isRegisterationSuccessful === false;
     }
   },
   watch: {
     'formData.role' (val) {
       this.isFarmer = val === 'farmer' ? true : false;
-    }
+    },
+    loggedInUser (user) {
+      if (user && user.role === 'farmer') {
+        this.$router.push('/dashboard');
+      } else {
+        this.$router.push('/products');
+      }
+    }     
   },
   methods: {
     ...mapActions({
       register: 'register'
     }),
+
+    resetAlertType () {
+      this.alertType = '';
+    },
+
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown;
     },
-    showAlert() {
-      this.dismissCountDown = this.dismissSecs;
-    },
-    async registerUser () {
 
-      try{
-        const res = await this.register(this.formData);
-        const user = await  this.$auth.loginWith('local', {
-          data: {
-            email: this.formData.email,
-            password: this.formData.password
-          },
-        });
-
-        if (user) {
-          console.log(user, res);
-          this.message = res.message;
-          this.success = true;
-          // await this.$router.push('/profile');
-        }
-
-      } catch (error) {
-        this.message = error.message;
-        this.error = true;
-        console.error(error);
+    comparePassword () {
+      if (this.formData.confirmPassword !== this.formData.password) {
+        throw new Error('Passwords do not match');
       }
     },
-  },
-  mounted () {
-    console.log(this.$auth)
-    // this.showAlert();
+
+    async registerUser () {
+      try{
+
+        this.comparePassword();
+
+        const { confirmPassword, ...reqData} = this.formData;
+
+        const { location, ...data } = reqData;
+
+        const finalData = this.isFarmer ? reqData : data;
+
+        const res = await this.register(finalData);
+
+        if (res.status === 200) {
+          const form = new FormData();
+          form.append('email', this.formData['email']);
+          form.append('password', this.formData['password']);
+          const user = await  this.$auth.loginWith('local', {
+            data: form
+          });
+  
+          if (user) {
+            this.message = res.message;
+            this.isRegisterationSuccessful = true;
+            this.dismissCountDown = 5;
+          }
+        }
+      } catch (error) {
+        this.message = error.message;
+        this.isRegisterationSuccessful = false;
+        this.dismissCountDown = 5;
+      }
+    },
   }
 }
 </script>
@@ -228,6 +236,23 @@ export default {
     margin-bottom: 3rem;
   }
 
+  .notifications {
+    position: fixed;
+    top: 9%;
+    left: 0;
+    width: 100vw;
+    margin: 0 auto;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+  }
+
+  .alert_e,
+  .alert_s {
+    width: 70%;
+    text-align: center;
+  }
+
   @media (min-width: 48.0625em) {
     .signup-form {
       max-width: 65%;
@@ -236,7 +261,6 @@ export default {
   }
   .signup-form .form__group {
     margin-top: 1rem;
-    /* margin-bottom: 0.5rem; */
   }
   .signup-form input[type=text],
   .signup-form input[type=password],
@@ -266,6 +290,4 @@ export default {
     border-radius: 3px;
     cursor: pointer;
   }
-
-
 </style>

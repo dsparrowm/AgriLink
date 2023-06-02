@@ -79,13 +79,13 @@ export default {
           logout: false
         }
       }
-    },
-    redirect: {
-      login: '/login',
-      logout: false,
-      callback: '/login',
-      home: '/'
     }
+    // redirect: {
+    //   login: '/login',
+    //   logout: false,
+    //   callback: '/login',
+    //   home: '/'
+    // }
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

@@ -5,12 +5,15 @@
         {{ productID ? 'Update' : 'Create'}} Product
       </h1>
       <div class="add-update__modal">
-        <b-form class="add-update__form p-3">
+        <b-form
+        ref="addUpdateForm"
+        @submit.prevent="submitItem"
+        class="add-update__form p-3">
   
           <b-input-group class="form-group">
             <label
             for="product-title">
-            Product title
+              Product title
             </label>
             <b-form-input
             id="product-name"
@@ -69,15 +72,22 @@
             for="product-img">
               Image
             </label>
+            <template
+              v-if="fileError">
+                <p class="w-100 text-danger fs-6">
+                  {{ fileErrorMsg }}
+                </p>
+            </template>
             <div class="d-flex w-100">
               <div
               v-if="productInfo.image"
               class="uploaded-img mr-3">
-                <img
+                <!-- <img
                 :src="productInfo.image"
                 class="img-responsive"
                 height="100"
-                alt="New product Image">
+                alt="New product Image"> -->
+                {{ productInfo.image }}
               </div>
               <label 
               for="product-img"
@@ -90,7 +100,9 @@
                   id="product-img"
                   style="display: none"
                 />
-                <span class="upload-btn">
+                <span
+                class="upload-btn"
+                :disabled="productInfo.image">
                   <template
                   v-if="loadingImage">
                   <font-awesome-icon
@@ -115,7 +127,7 @@
             </label>
             <b-form-select
             id="product-category"
-            v-model="selectedCategory"
+            v-model="productInfo.category"
             :options="productCategories"
             class="form-field w-100">
             </b-form-select>
@@ -128,23 +140,35 @@
         </b-form>
       </div>
     </div>
+    <message-alert
+    @resetAlertType="resetAlertType"
+    :alertType="alertType"
+    :message="alertMessage">
+    </message-alert>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
+import MessageAlert from '../../components/Modals/MessageAlert.vue';
 import { PRODUCTS_CATEGORIES } from '../../utils/constants';
 export default {
+  components: { MessageAlert },
   name: 'AddOrUpdateProductPage',
   layout: 'dashboard',
   data () {
     return {
-      fileError: '',
+      alertType: '',
+      alertMessage: '',
+      fileError: false,
+      fileErrorMsg: '',
       productInfo: {
         name: '',
         description: '',
         price: '',
         image: '',
-        quantity: ''
+        quantity: '',
+        category: ''
       },
       productID: this.$route.query.ID,
       selectedCategory: null,
@@ -158,26 +182,115 @@ export default {
   },
   computed: {
     productCategories () {
-      this.categories.unshift(this.def_option);
+      if (this.categories[0].value !== null) {
+        this.categories.unshift(this.def_option);
+      }
       return this.categories;
     }
   },
   methods: {
+    ...mapActions ({
+      createProduct: 'products/createProduct',
+      farmerProductList: 'products/getFarmersProducts',
+      getProductById: 'products/getProductById',
+      updateProductDetails: 'products/updateProductDetails',
+    }),
+
+    submitItem () {
+      if (this.productID) {
+        this.updateProductInfo();
+      } else {
+        this.createNewProduct(this.productInfo);
+      }
+    },
+
+    resetAlertType () {
+      this.alertType = '';
+    },
+
+    async updateProductInfo () {
+      try {
+        const reqDate = { ID: this.productID, ...this.productInfo };
+        const res = await this.updateProductDetails(reqDate);
+        if (res.status === 200 && res.data.hasOwnProperty('message')) {
+          this.alertMessage = res.data.message;
+          this.alertType = 'success';
+          this.resetForm();
+        } else {
+          this.alertMessage = res.data.message;
+          this.alertType = 'danger';
+        }
+      } catch (error) {
+        this.alertMessage = error.message;
+        this.alertType = 'danger';
+        console.error(error);
+      }
+    },
+
+    async getSingleProduct (ID) {
+      try {
+        const res = await this.getProductById(ID);
+        if (res) {
+          this.productInfo.name = res.data.name;
+          // this.productInfo.description = res.data.description;
+          this.productInfo.price = res.data.price;
+          this.productInfo.image = res.data.image_url;
+          this.productInfo.quantity = res.data.quantity;
+          this.productInfo.category = res.data.category;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
     onFileChange (e) {
       this.loadingImage = true;
       let files = e.target.files || e.dataTransfer.files;
       if (files) {
         const file = files[0];
-        console.log('after formating', file, this.productInfo.image);
-      //   this.productInfo.image
-        this.loadingImage = false;
-        
-       if (file.size > 1048576){
-        this.loadingImage = false
-         e.preventDefault();
-        this.fileError = 'File is too big must be less than 1MB!'
+       if (file.size > 1048576) {
+          e.preventDefault();
+          this.loadingImage = false;
+          this.fileError = true;
+          this.fileErrorMsg = 'File is too big must be less than 1MB!'
+        } else {
+          this.productInfo.image = file;
+          this.loadingImage = false;
+          this.fileError = false;
         }
       }
+    },
+
+    resetForm () {
+      var self = this; 
+      //Iterate through each object field, key is name of the object field`
+      for (const field in this.productInfo) {
+        self.productInfo[field] = '';
+      }
+    },
+
+    async createNewProduct () {
+      try {
+        const res = await this.createProduct(this.productInfo);
+        if (res.status === 200 && res.data.hasOwnProperty('message')) {
+          this.resetForm();
+          this.alertMessage = res.data.message;
+          this.alertType = 'success';
+        } else {
+          this.alertMessage = res.data.message;
+          this.alertType = 'danger';
+        }
+      } catch (error) {
+        this.alertMessage = error.message;
+        this.alertType = 'danger';
+        console.error(error);
+      }
+    }
+  },
+
+  mounted () {
+    if (this.productID) {
+      this.getSingleProduct(this.productID);
     }
   }
 }

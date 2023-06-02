@@ -9,6 +9,7 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 from werkzeug.utils import secure_filename
 from app.helper import allowed_file
 from config import Config
+from datetime import timedelta
 import os
 
 @app.route('/status', methods=['GET'])
@@ -27,7 +28,7 @@ def login():
     if user is None or check_password_hash(user.password_hash, form_password) != True:
         return jsonify({'message': 'Invalid email or password'}), 401
     else:
-        access_token = create_access_token(identity=user.id)
+        access_token = create_access_token(identity=user.id, expires_delta=timedelta(days=7))
         return jsonify({'message': 'Login successful',
                         'token': access_token,
                         'user_id': user.id}), 200
@@ -160,6 +161,7 @@ def get_product(id):
                 'quantity': product.quantity,
                 'image_url': product.image_url,
                 'category': category.name,
+                'description': product.description,
                 'category_id': category.id
         }
         return jsonify(product_data)
@@ -189,7 +191,8 @@ def get_category():
                     'name': product.name,
                     'price': product.price,
                     'quantity': product.quantity,
-                    'image_url': product.image_url
+                    'image_url': product.image_url,
+                    'description': product.description,
                 }
                 for product in paginated_products
             ],
@@ -206,7 +209,7 @@ def update_product(id):
     """enables farmers to update the details of their products"""
     current_user = get_jwt_identity()
     if current_user != id:
-        return jsonify({'message': 'Unauthorized'})
+        return jsonify({'error': 'Unauthorized'})
     user = User.query.get(current_user)
     if not user:
         return jsonify({'error': 'user not found'})
@@ -298,12 +301,13 @@ def add_product():
 
     #Securely save the file to the upload directory
     filename = secure_filename(file.filename)
+    print(filename)
     file_path = os.path.join(app.config['PRODUCT_IMAGE_FOLDER'], filename)
     file.save(file_path)
 
     #Store the product details and image url in the database
     product = Product(name=name, price=price, quantity=quantity,
-                      image_url=file_path, farmer_id=user.id,
+                      image_url=filename, farmer_id=user.id,
                       category_id=p_category.id,
                       description=description)
     db.session.add(product)
@@ -352,7 +356,8 @@ def user_products():
                     'name': product.name,
                     'price': product.price,
                     'quantity': product.quantity,
-                    'image_url': product.image_url
+                    'image_url': product.image_url,
+                    'description': product.description,
                 }
                 for product in paginated_products
             ],
