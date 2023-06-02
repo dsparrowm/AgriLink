@@ -216,43 +216,36 @@ def update_product(id):
     product = Product.query.get(id)
     if not product:
         return jsonify({'error': 'product not found'})
-    if 'name' not in request.form:
-        return jsonify({'error': 'product name is missing'})
-    if 'price' not in request.form:
-        return jsonify({'error': 'product price is missing'})
-    if 'quantity' not in request.form:
-        return jsonify({'error': 'product quantity is missing'})
-    if 'category' not in request.form:
-        return jsonify({'error': 'product category is missing'})
-    if 'description' not in request.form:
-        return jsonify({'error': 'product description is missing'})
-    if 'image' not in request.files:
-        return jsonify({'error': 'no image file provided'})
-    name = request.form['name']
-    price = request.form['price']
-    quantity = request.form['quantity']
-    category = request.form['category']
-    description = request.form['description']
-    file = request.files['image']
-
-    #check that the image exists and file format is correct
-    if file.filename == '':
-        return jsonify({'error': 'no file selected'})
-    if not allowed_file(file.filename):
-        return jsonify({'error': 'Invalid file format'})
-    filename = secure_filename(file.filename)
-    file_path = os.path.join(app.config['PRODUCT_IMAGE_FOLDER'], filename)
-    if product.image_url != file_path:
-        file.save(file_path)
-        product.image_url = file_path
-    if name != product.name:
+    if 'name' in request.form:
+        name = request.form['name']
         product.name = name
-    if price != product.price:
+    if 'price' in request.form:
+        price = request.form['price']
         product.price = price
-    if quantity != product.quantity:
+    if 'quantity' in request.form:
+        quantity = request.form['quantity']
         product.quantity = quantity
-    if description != product.description:
+    if 'category' in request.form:
+        category = request.form['category']
+        req = Category.query.filter_by(name=category).first()
+        if not req:
+            return jsonify({'error': 'Category does not exist'})
+        product.category_id = req.id
+    if 'description' in request.form:
+        description = request.form['description']
         product.description = description
+    if 'image' in request.files:
+        file = request.files['image']
+        #check that the image exists and file format is correct
+        if file.filename == '':
+            return jsonify({'error': 'no file selected'})
+        if not allowed_file(file.filename):
+            return jsonify({'error': 'Invalid file format'})
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['PRODUCT_IMAGE_FOLDER'], filename)
+        if product.image_url != filename:
+            file.save(file_path)
+            product.image_url = filename
 
     db.session.commit()
     return jsonify({'message': 'product updated successfully'})
@@ -345,7 +338,7 @@ def user_products():
     start_index = (page - 1) * per_page
     end_index = start_index + per_page
 
-    products = Product.query.filter_by(farmer_id=user.id).all()
+    products = db.session.query(Product, Category).join(Category).all()
     total_items = len(products)
     total_pages = (total_items // per_page) + (1 if total_items % per_page > 0 else 0)
     paginated_products = products[start_index:end_index]
@@ -358,8 +351,9 @@ def user_products():
                     'quantity': product.quantity,
                     'image_url': product.image_url,
                     'description': product.description,
+                    'category': Category.name
                 }
-                for product in paginated_products
+                for product, Category in paginated_products
             ],
             'page': page,
             'per_page': per_page,
@@ -367,3 +361,16 @@ def user_products():
             'total_pages': total_pages
         }
     return jsonify(response)
+@app.route('/product/<int:id>/farmer', methods=['GET'])
+def get_product_farmer_details(id):
+    product = Product.query.get(id)
+    if not product:
+        return jsonify({'error': 'Product not found'})
+    farmer = Farmer.query.get(product.farmer_id)
+    user = User.query.filter_by(id=farmer.id).first()
+    return jsonify({'id': user.id,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'phone': user.phone,
+                    'location': farmer.location
+                })
