@@ -60,6 +60,7 @@
                 </ul>
             </li>
             <li
+            v-if="isFarmer"
             class="menu__item"
             :class="{'menu__item--active': currentPage === 'dashboard'}">
                 <NuxtLink
@@ -131,7 +132,7 @@ export default {
             categories: PRODUCTS_CATEGORIES,
             showMenu: false,
             showSubMenu: false,
-            activePage: 'index'
+            activePage: this.$route.name || 'index'
         }
     },
     computed: {
@@ -147,6 +148,13 @@ export default {
             set (val) {
                 this.activePage = val;
             }
+        },
+
+        isFarmer () {
+           return (
+                this.isAuthenticated 
+                && this.loggedInUser.role === 'farmer'
+            );
         }
     },
     watch: {

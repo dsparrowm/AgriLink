@@ -6,9 +6,15 @@
         :id="inputId"
         :name="inputName"
         v-model="inputData"
-        :placeholder="'update ' + inputName"
+        :placeholder="'Enter new ' + displayMsg"
         required
         >
+        <template
+        v-if="isNameField">
+        <p class="text-info">
+          Note: The full name must consist of two words. If more than two words are provided, only the first and second words will be saved.
+        </p>
+        </template>
       </div>
 </template>
 
@@ -35,6 +41,14 @@ export default {
   data () {
     return {
       inputData: ''
+    }
+  },
+  computed: {
+    isNameField () {
+      return this.inputName === 'name';
+    },
+    displayMsg () {
+      return this.isNameField ? 'full name' : this.inputName;
     }
   },
   watch: {

@@ -50,11 +50,15 @@ export const actions = {
   },
 
   async updateUserInfo (commit, payload) {
-    const { ID, ...data } = payload;
+    const { id, ...data } = payload;
+    const form = new FormData();
+    for (const field in data) {
+      form.append(field, data[field]);
+    }
     return await this.$axios
-      .post(`/updateUserInfo/${ID}`, data)
+      .post(`/updateUserInfo/${id}`, form)
       .then(res => {
-        return res.data;
+        return res;
       })
       .catch(err => {
         return err;

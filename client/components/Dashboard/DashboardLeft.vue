@@ -2,12 +2,14 @@
   <div class="right-side pl-3 py-3">
     <div class="admin d-flex align-items-center mb-5">
       <div class="admin-img pl-2">
-        <span class="icon-sm">
-          <font-awesome-icon icon="user"/>
-        </span>
+        <NuxtLink to="/profile">
+          <span class="icon-sm">
+            <font-awesome-icon icon="user"/>
+          </span>
+        </NuxtLink>
       </div>
       <div class="admin-lable ml-2 p-2">
-        Admin John
+        {{ `${user.first_name} ${user.last_name}` }}
       </div>
     </div>
     <div class="dash-menu">
@@ -87,8 +89,20 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   name: 'DashboardLeft',
+
+  computed: {
+    ...mapGetters([
+      'isAuthenticated',
+      'loggedInUser'
+    ]),
+
+    user () {
+      return this.loggedInUser;
+    }
+  }
 }
 </script>
 

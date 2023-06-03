@@ -188,7 +188,7 @@
         </div>
     </div>
     <div class="footer__base">
-        © 2023 All Rights Reserved. Developed By Codezeel
+        © 2023 All Rights Reserved. Developed By Team AgriLink
     </div>
   </footer>
 </template>

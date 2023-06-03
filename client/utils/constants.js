@@ -27,7 +27,14 @@ export const APP_PAGES = [
 ];
 
 export const PRODUCTS_CATEGORIES = [
-  { value: 'Grains', text: 'Grains' },
-  { value: 'Live stock', text: 'Live stock' },
-  { value: 'Vegitable', text: 'Vegitable' }
+  { value: 'dairy', text: 'Dairy' },
+  { value: 'eggs', text: 'Eggs' },
+  { value: 'fruits', text: 'Fruits' },
+  { value: 'grains', text: 'Grains and Cereals' },
+  { value: 'herbs', text: 'Herbs and Spices' },
+  { value: 'honey', text: 'Honey' },
+  { value: 'seeds', text: 'Nuts and Seeds' },
+  { value: 'livestock', text: 'Livestock' },
+  { value: 'specialty', text: 'Specialty' },
+  { value: 'vegitable', text: 'Vegitable' }
 ];

@@ -164,6 +164,11 @@ export default {
   components: { MessageAlert },
   name: 'ProductListingPage',
   layout: 'dashboard',
+
+  head: {
+    title: 'AgriLink | Products'
+  },
+
   data () {
     return {
       alertType: '',

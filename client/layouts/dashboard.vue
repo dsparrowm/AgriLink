@@ -26,7 +26,7 @@
 <script>
 export default {
   name: 'DashboardLayout',
-
+  middleware: ['auth'],
   data () {
     return {
       showBars: true

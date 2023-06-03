@@ -218,6 +218,8 @@ export default {
             this.message = res.message;
             this.isRegisterationSuccessful = true;
             this.dismissCountDown = 5;
+            const newUserInfo = await this.$auth.fetchUser();
+            console.log(newUserInfo);
           }
         }
       } catch (error) {

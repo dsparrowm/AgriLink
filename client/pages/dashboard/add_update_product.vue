@@ -156,6 +156,11 @@ export default {
   components: { MessageAlert },
   name: 'AddOrUpdateProductPage',
   layout: 'dashboard',
+
+  head: {
+    title: 'AgriLink | Create | Update Product'
+  },
+
   data () {
     return {
       alertType: '',

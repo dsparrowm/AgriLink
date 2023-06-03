@@ -88,19 +88,12 @@
 </template>
 
 <script>
-import MonthlyOrders from '../../components/Dashboard/Products/Monthly/MonthlyOrders.vue';
-import MonthlyRevenue from '../../components/Dashboard/Products/Monthly/MonthlyRevenue.vue';
-import MonthlySummary from '../../components/Dashboard/Products/Monthly/MonthlySummary.vue';
-import MonthlyUnitSold from '../../components/Dashboard/Products/Monthly/MonthlyUnitSold.vue';
 export default {
   name: 'DashboardIndexPage',
   layout: 'dashboard',
 
-  components: {
-    MonthlyRevenue,
-    MonthlyOrders,
-    MonthlyUnitSold,
-    MonthlySummary
+  head: {
+    title: 'AgriLink | Dashboard'
   },
 
   data () {

@@ -139,6 +139,13 @@ export default {
     }
   },
 
+  watch: {
+    '$route.query.category' (val) {
+      this.category = val;
+      this.getProductListByCategory();
+    },
+  },
+
   computed : {
     rows () {
       return this.totalItems;
@@ -154,7 +161,7 @@ export default {
       return require('../../assets/images/product_images/' + url);
     },
 
-    async getProductListByCategory (page) {
+    async getProductListByCategory (page=1) {
       this.loading = true;
       const reqData = {
         page: page,
@@ -166,8 +173,8 @@ export default {
         if (res.status === 200 && !res.data.hasOwnProperty('error')) {
           this.productList = res.data.products || [];
           this.totalItems = res.data.total_items;
-          this.loading = false;
         }
+        this.loading = false;
       } catch (error) {
         console.error(error);
         this.loading = false;
@@ -175,7 +182,7 @@ export default {
     },    
   },
   mounted () {
-    this.getProductListByCategory(this.currentPage);
+    this.getProductListByCategory();
   }
 }
 </script>
@@ -221,6 +228,7 @@ export default {
 
 .product__btn {
   background-color: var(--clr-primary);
+  color: var(--clr-ntrl-min);
   border: none;
 }
 </style>

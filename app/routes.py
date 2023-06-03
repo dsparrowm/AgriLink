@@ -98,10 +98,10 @@ def user_info():
 def update_user(id):
     current_user = get_jwt_identity()
     if current_user != id:
-        return jsonify({'message': 'Unauthorized'}), 401
+        return jsonify({'error': 'Unauthorized'}), 401
     user = User.query.get(id)
     if not user:
-        return jsonify({'message': 'User Not Found'}), 404
+        return jsonify({'error': 'User Not Found'}), 404
     if user.role == 'farmer':
         farmer = Farmer.query.filter_by(user_id=user.id).first()
         if 'first_name' in request.form:
