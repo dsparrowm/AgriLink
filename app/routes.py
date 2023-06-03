@@ -123,8 +123,8 @@ def update_user(id):
             filename = secure_filename(file.filename)
             file_path = os.path.join(app.config['USER_IMAGE_FOLDER'], filename)
             file.save(file_path)
-            user.image_url = file_path
-        
+            user.image_url = filename
+        db.session.commit()   
         return jsonify({'message': 'user updated successfully'})
     elif user.role == 'buyer':
         if 'first_name' in request.form:
