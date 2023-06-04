@@ -3,9 +3,47 @@
     <h1>Sales Analytics</h1>
     <div class="performance">
       <div class="performance__row">
+        <div
+        class="performance__account">
+          <div class="left l-flex">
+            <div class="total__bal flex-box monthly-card">
+              <div class="icon-wrapper bg-secondary">
+                <span class="icon-md">
+                  <font-awesome-icon :icon="['fas', 'dollar-sign']" />
+                </span>
+              </div>
+              <div>
+                <h6>Total Balances</h6>
+                <span class="font-weight-bold">&#8358;30000</span>
+              </div>
+            </div>
+            <div class="available__bal flex-box monthly-card">
+              <div class="icon-wrapper bg-success">
+                <span class="icon-md">
+                  <font-awesome-icon :icon="['fas', 'dollar-sign']" />
+                </span>
+              </div>
+              <div>
+                <h6>Available Balance</h6>
+                <span class="font-weight-bold">&#8358;2000</span>
+              </div>
+            </div>
+          </div>
+          <div class="pending__bal flex-box monthly-card right">
+            <div class="icon-wrapper bg-primary">
+              <span class="icon-md">
+                <font-awesome-icon :icon="['fas', 'dollar-sign']" />
+              </span>
+            </div>
+            <div>
+              <h6>Pending Balance</h6>
+              <span class="font-weight-bold">&#8358;10000</span>
+            </div>
+          </div>
+        </div>
         <div class="performance__totals">
           <div class="left l-flex">
-            <div class="total__sales monthly-card">
+            <div class="total__sales monthly-card flex-box">
               <div class="icon-wrapper bg-warning">
                 <span class="icon-md">
                   <font-awesome-icon :icon="['fas', 'dollar-sign']" />
@@ -13,11 +51,11 @@
               </div>
               <div>
                 <h6>Total Sales</h6>
-                <span class="font-weight-bold">$3000,0000</span>
+                <span class="font-weight-bold">&#8358;3000,0000</span>
               </div>
             </div>
 
-            <div class="total__orders monthly-card">
+            <div class="total__orders monthly-card flex-box">
               <div class="icon-wrapper bg-success">
                 <span class="icon-md">
                   <font-awesome-icon icon="shopping-cart"/>
@@ -30,7 +68,7 @@
             </div>
           </div>
 
-          <div class="total__products monthly-card right">
+          <div class="total__products monthly-card right flex-box">
             <div class="icon-wrapper bg-primary">
               <span class="icon-md">
                 <font-awesome-icon icon="shopping-basket"/>
@@ -220,6 +258,7 @@ export default {
   padding: 0.5rem;
 }
 
+
 .monthly-card  h6 {
   margin-bottom: 0;
   font-size: var(--fs-milli);
@@ -227,20 +266,21 @@ export default {
   color: var(--clr-base-lt);
 }
 
+.total__bal,
+.available__bal,
 .total__sales,
 .total__orders {
   flex: 1;
 }
 
-.total__sales,
-.total__orders,
-.total__products {
+.flex-box {
   display: flex;
   gap: 1rem;
   padding: 1rem;
   margin-bottom: 1.5rem;
 }
 
+.performance__account,
 .performance__totals,
 .l-flex,
 .charts {
@@ -257,11 +297,14 @@ export default {
 }
 
 @media (max-width: 68.0625em) {
+  .total__bal,
+  .available__bal,
   .total__orders,
   .total__sales {
     margin-bottom: 0;
   }
 
+  .performance__account,
   .performance__totals,
   .l-flex,
   .charts {

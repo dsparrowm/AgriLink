@@ -16,7 +16,7 @@
         {{ imgToUpload }}
         </template>
         <template v-else>
-          <img src="../../assets/images/avatar.jpg" alt="Avatar">
+          <img src="../../assets/images/blank-profile-picture.png" alt="Avatar">
         </template>
         </div>
         <div class="upload-img__file">
@@ -207,6 +207,7 @@ export default {
         if (res.status === 200 && res.data.hasOwnProperty('message')) {
           this.alertMessage = res.data.message;
           this.alertType = 'success';
+          await this.$auth.fetchUser();
         } else {
           this.alertMessage = res.data.message;
           this.alertType = 'danger';

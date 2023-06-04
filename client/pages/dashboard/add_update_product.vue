@@ -10,7 +10,8 @@
         @submit.prevent="submitItem"
         class="add-update__form p-3">
   
-          <b-input-group class="form-group">
+          <b-input-group
+          class="form-group">
             <label
             for="product-title">
               Product title
@@ -187,10 +188,11 @@ export default {
   },
   computed: {
     productCategories () {
-      if (this.categories[0].value !== null) {
-        this.categories.unshift(this.def_option);
+      const catList = [...this.categories];
+      if (catList[0].value !== null) {
+        catList.unshift(this.def_option);
       }
-      return this.categories;
+      return catList;
     }
   },
   methods: {

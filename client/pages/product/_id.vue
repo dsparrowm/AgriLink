@@ -30,11 +30,19 @@
                 <span>{{product.quantity}} In stock</span>
               </b-card-text>
               <b-card-text>
-                <b-button
-                href="/"
-                class="product__btn buy-now-btn w-100">
-                  Buy Now
-                </b-button>
+                <template
+                  v-if="userObj">                    
+                  <payment
+                  :product="product">
+                  </payment>
+                  </template>
+                  <template v-else>
+                    <b-button
+                    href="/login"
+                  class="product__btn w-100">
+                    Buy Now
+                  </b-button>
+                  </template>
               </b-card-text>
               <b-card-text>
                 <h4 class="text-uppercase">Description</h4>
@@ -66,7 +74,9 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import Payment from '../../components/Payment.vue';
 export default {
+  components: { Payment },
   name: 'ProductDetails',
   layout: 'main',
   head:{
@@ -80,6 +90,13 @@ export default {
       productOwner: {} 
     }
   },
+
+  computed: {
+    ...mapGetters({
+      userObj: 'loggedInUser'
+    }),
+  },
+
   methods: {
     ...mapActions ({
       getProductById: 'products/getProductById',

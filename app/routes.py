@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from werkzeug.utils import secure_filename
 from app.helper import allowed_file
-from config import Config
+from config_old import Config
 from datetime import timedelta
 import os
 
@@ -48,7 +48,7 @@ def register():
         location = request.form.get('location')
     user_exists = User.query.filter_by(email=form_email).first()
     if user_exists:
-        return jsonify({'message': 'user already exists'}), 403
+        return jsonify({'error': 'user already exists'}), 403
     hashed_password = generate_password_hash(form_password)
     if form_role == 'farmer':
         user = User(first_name=first_name,

@@ -191,10 +191,11 @@ export default {
     },
 
     productCategories () {
-      if (this.categories[0].value !== null) {
-        this.categories.unshift(this.def_option);
+      const catList = [...this.categories];
+      if (catList[0].value !== null) {
+        catList.unshift(this.def_option);
       }
-      return this.categories;
+      return catList;
     }
   },
 

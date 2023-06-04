@@ -40,49 +40,56 @@
           :key="i"
           class="product mb-3">
           <div>
-            <b-link :href="`/product/${product.id}`"
-            class="card__link">
               <b-card
                 tag="article"
                 class="product__card"
               >
-              <div>
-                <img
-                height="200"
-                width="100%"
-                :src="getImgUrl(product.image_url)"
-                v-bind:alt="product.image_url">
-              </div>
-              <b-card-text 
-              class="d-flex justify-content-between mb-0">
-                <b-card-text class="font-weight-bold mb-0">
-                  {{ product.name }}
+              <b-link :href="`/product/${product.id}`"
+               class="card__link">
+                <div>
+                  <img
+                  height="200"
+                  width="100%"
+                  :src="getImgUrl(product.image_url)"
+                  v-bind:alt="product.image_url">
+                </div>
+                <b-card-text 
+                class="d-flex justify-content-between mb-0">
+                  <b-card-text class="font-weight-bold mb-0">
+                    {{ product.name }}
+                  </b-card-text>
+                  <b-card-text class="small text-muted">
+                    &#8358; {{ product.price }}
+                  </b-card-text>
                 </b-card-text>
-                <b-card-text class="small text-muted">
-                  &#8358; {{ product.price }}
+                <b-card-text class="mb-0 text-muted small fs-6">
+                  {{product.quantity}} In stock
                 </b-card-text>
-              </b-card-text>
-              <b-card-text class="mb-0 text-muted small fs-6">
-                {{product.quantity}} In stock
-              </b-card-text>
-              <b-card-text class="small mb-0">
-              {{ product.description.slice(0, 30) + '...' }}
-               <NuxtLink
-               :to="`/product/${product.id}`"
-               class="card__link text-muted small fs-6">
-                view more
-               </NuxtLink>
-              </b-card-text>
+                <b-card-text class="small mb-0">
+                {{ product.description.slice(0, 30) + '...' }}
+                <NuxtLink
+                :to="`/product/${product.id}`"
+                class="card__link text-muted small fs-6">
+                  view more
+                </NuxtLink>
+                </b-card-text>
+              </b-link>
                 <template #footer>
-                  <b-button
-                  href="/"
+                  <template
+                  v-if="userObj">                    
+                  <payment
+                  :product="product">
+                  </payment>
+                  </template>
+                  <template v-else>
+                    <b-button
+                    href="/login"
                   class="product__btn w-100">
                     Buy Now
                   </b-button>
-                  <!-- <small class="text-muted">Last updated 3 mins ago</small> -->
+                  </template>
                 </template>
               </b-card>
-            </b-link>
           </div>
           </b-col>
         </b-row>
@@ -118,8 +125,10 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
+import Payment from '../../components/Payment.vue';
 export default {
+  components: { Payment },
   name: 'ProductListingPage',
   layout: 'main',
 
@@ -147,6 +156,10 @@ export default {
   },
 
   computed : {
+    ...mapGetters({
+      userObj: 'loggedInUser'
+    }),
+
     rows () {
       return this.totalItems;
     }
@@ -173,6 +186,9 @@ export default {
         if (res.status === 200 && !res.data.hasOwnProperty('error')) {
           this.productList = res.data.products || [];
           this.totalItems = res.data.total_items;
+        } else {
+          this.productList = [];
+          this.totalItems = 0;
         }
         this.loading = false;
       } catch (error) {

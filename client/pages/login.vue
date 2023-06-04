@@ -112,7 +112,6 @@ export default {
                 if (res) {
                     this.alertMessage = res.message;
                     this.alertType = 'success';
-                    this.dismissCountDown = 5;
                 }
             } catch (error) {
                 this.alertMessage = 'Invalid email or password';

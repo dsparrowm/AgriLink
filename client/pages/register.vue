@@ -153,19 +153,12 @@ export default {
     ...mapGetters({
         loggedInUser: 'loggedInUser'
     }),
-
-    registerSuccess () {
-      return this.isRegisterationSuccessful;
-    },
-
-    registerError () {
-      return this.isRegisterationSuccessful === false;
-    }
   },
   watch: {
     'formData.role' (val) {
       this.isFarmer = val === 'farmer' ? true : false;
     },
+
     loggedInUser (user) {
       if (user && user.role === 'farmer') {
         this.$router.push('/dashboard');
@@ -183,10 +176,6 @@ export default {
       this.alertType = '';
     },
 
-    countDownChanged(dismissCountDown) {
-      this.dismissCountDown = dismissCountDown;
-    },
-
     comparePassword () {
       if (this.formData.confirmPassword !== this.formData.password) {
         throw new Error('Passwords do not match');
@@ -197,35 +186,35 @@ export default {
       try{
 
         this.comparePassword();
-
+        // Remove confirmpassword from final request data
         const { confirmPassword, ...reqData} = this.formData;
-
+        // Extarct location out of file request data,
+        //  if user type Farmer .
         const { location, ...data } = reqData;
 
         const finalData = this.isFarmer ? reqData : data;
-
+        // Post/register a new user 
         const res = await this.register(finalData);
 
-        if (res.status === 200) {
+        if (res.status === 200 && res.data.hasOwnProperty('message')) {
+          // Create form data for login.
           const form = new FormData();
           form.append('email', this.formData['email']);
           form.append('password', this.formData['password']);
           const user = await  this.$auth.loginWith('local', {
             data: form
           });
-  
-          if (user) {
-            this.message = res.message;
-            this.isRegisterationSuccessful = true;
-            this.dismissCountDown = 5;
-            const newUserInfo = await this.$auth.fetchUser();
-            console.log(newUserInfo);
-          }
+
+          this.alertMessage = res.message;
+          this.alertType = 'success';
+        } else {
+          this.alertMessage = 'user already exists';
+          this.alertType = 'danger';
         }
       } catch (error) {
-        this.message = error.message;
-        this.isRegisterationSuccessful = false;
-        this.dismissCountDown = 5;
+        this.alertMessage = 'Invalid email or password';
+        this.alertType = 'danger';
+        console.error(error);
       }
     },
   }

@@ -1,4 +1,4 @@
-from config import Config
+from config_old import Config
 from app import app
 
 def allowed_file(filename):
