@@ -408,4 +408,42 @@ def farmer_balance_info(id):
     for order in orders:
         balance += order.amount
     return jsonify({'balance': balance})
+
+@app.route('/user/orders', methods=['GET'])
+@jwt_required()
+def user_orders():
+    """ Returns all the orders for that user """
+    current_user = get_jwt_identity()
+    user = User.query.get(current_user)
+    orders = db.session.query(Product, Order).join(Order).all()
+    if user.role == 'farmer':
+        response = {
+            'Transactions': [
+                {
+                    'order_id': order.id,
+                    'createad_at': order.created_at,
+                    'amount': order.amount,
+                    'status': order.status,
+                    'product_name': product.name,
+                    'buyer_id': order.buyer_id
+                }
+                for product, order in orders
+            ]
+        }
+        return jsonify(response)
+    elif user.role == 'buyer':
+        response = {
+            'Transactions': [
+                {
+                    'order_id': order.id,
+                    'createad_at': order.created_at,
+                    'amount': order.amount,
+                    'status': order.status,
+                    'product_name': product.name,
+                    'farmer_id': order.farmer_id
+                }
+                for product, order in orders
+            ]
+        }
+        return jsonify(response)
     
