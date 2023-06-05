@@ -56,3 +56,15 @@ class Product(db.Model):
 
     def __repr__(self):
         return "Product {}".format(self.name)
+    
+
+class Order(db.Model):
+    """This class stores details about the transactions done on the site"""
+    __tablename__ = 'Order'
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey('Product.id'))
+    buyer_id = db.Column(db.Integer, db.ForeignKey('User.id'))
+    farmer_id = db.Column(db.Integer, db.ForeignKey('Farmer.id'))
+    amount = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.String(15), default='pending')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)

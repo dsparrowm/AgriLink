@@ -144,7 +144,7 @@ export default {
       totalItems: null,
       perPage: 12,
       productList: [],
-      category: this.$route.query.category,
+      category: this.$route.query.category || 'all',
     }
   },
 
@@ -176,11 +176,13 @@ export default {
 
     async getProductListByCategory (page=1) {
       this.loading = true;
+
       const reqData = {
         page: page,
         per_page: this.perPage,
         category: this.category
       }
+    
       try {
         const res = await this.products(reqData);
         if (res.status === 200 && !res.data.hasOwnProperty('error')) {

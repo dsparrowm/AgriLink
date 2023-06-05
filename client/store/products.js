@@ -52,6 +52,7 @@ export const actions = {
         return err;
       });
   },
+
   async productsByCategory (commit, payload) {
     return await this.$axios
       .get('/products/category', {
@@ -81,6 +82,28 @@ export const actions = {
   async getProductById (commit, ID) {
     return await this.$axios
       .get(`/product/${ID}`)
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        return err;
+      });
+  },
+
+  async getUserOrderlist (commit) {
+    return await this.$axios
+      .get('/user/orders')
+      .then(res => {
+        return res.data;
+      })
+      .catch(err => {
+        return err;
+      });
+  },
+
+  async createOrder (commit, payload) {
+    return await this.$axios
+      .post('/user/product/order', payload)
       .then(res => {
         return res;
       })

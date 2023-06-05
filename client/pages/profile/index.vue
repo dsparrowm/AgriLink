@@ -79,9 +79,11 @@
           </article>
         </div>
       </div>
-      <button class="btn profile__trans">
-        View Transaction History
-      </button>
+      <b-button
+      href="/orders"
+      class="btn profile__trans">
+        View Order History
+      </b-button>
     </div>
     <!-- User Information Update Form -->
     <template v-if="showUpdateForm">
@@ -100,7 +102,8 @@
     <message-alert
     @resetAlertType="resetAlertType"
     :alertType="alertType"
-    :message="alertMessage"></message-alert>
+    :message="alertMessage">
+    </message-alert>
   </div>
 </template>
 
@@ -116,6 +119,9 @@ import MessageAlert from '../../components/Modals/MessageAlert.vue';
 export default {
   name: 'ProfilePage',
   layout: 'main',
+  head: {
+    title: 'AgriLink | Personal Data'
+  },
   components: {
     UserInfoUpdateInput,
     UserInfoUpdateForm,
@@ -130,12 +136,6 @@ export default {
       fileErrorMsg: '',
       showUpdateForm: false,
       imgToUpload: null,
-      // userObj: {
-      //   name: 'John Doe',
-      //   address: 'NO. 5 demo street Lagos',
-      //   email: 'Johndeo.gmail.com',
-      //   phone: '+123 816 805 0011'
-      // },
       inputData: '',
       payload: {},
       selectedKey: '',
@@ -158,6 +158,7 @@ export default {
       return this.lastNameFeilds !== '';
     }
   },
+
   methods: {
     ...mapActions({
       updateUserInfo: 'updateUserInfo'
@@ -231,9 +232,6 @@ export default {
     }
 
   },
-  mounted () {
-    console.log(this.$auth);
-  }
 }
 </script>
 

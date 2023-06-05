@@ -3,12 +3,12 @@ with the fromtend
 """
 from flask import request, jsonify
 from app import app, db
-from app.models import User, Farmer, Category, Product
+from app.models import User, Farmer, Category, Product, Order
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from werkzeug.utils import secure_filename
 from app.helper import allowed_file
-from config_old import Config
+from config import Config
 from datetime import timedelta
 import os
 
@@ -142,7 +142,7 @@ def update_user(id):
             filename = secure_filename(file.filename)
             file_path = os.path.join(app.config['USER_IMAGE_FOLDER'], filename)
             file.save(file_path)
-            user.image_url = file_path
+            user.image_url = filename
     
         db.session.commit()
         return jsonify({'message': 'user updated successfully'})
@@ -374,3 +374,76 @@ def get_product_farmer_details(id):
                     'phone': user.phone,
                     'location': farmer.location
                 })
+
+@app.route('/user/product/order', methods=['POST'])
+@jwt_required()
+def completed_order():
+    current_user = get_jwt_identity()
+    data = request.get_json()
+    product_id = data.get('product_id')
+    user = User.query.get(current_user)
+    product = Product.query.get(product_id)
+    if not product:
+        return jsonify({'error': 'Product not found'})
+    farmer = Farmer.query.filter_by(user_id=product.farmer_id).first()
+    order = Order(product_id=product.id,
+                  buyer_id=current_user,
+                  farmer_id=farmer.user_id,
+                  amount=product.price
+                )
+    db.session.add(order)
+    db.session.commit()
+    return jsonify({'message': 'order entered successfully'})
+
+@app.route('/user/<int:id>/balance', methods=['GET'])
+@jwt_required()
+def farmer_balance_info(id):
+    current_user = get_jwt_identity()
+    if current_user != id:
+        return jsonify({'error': 'Unauthorized user'})
+    orders = Order.query.filter_by(farmer_id=id).all()
+    if not orders:
+        return jsonify({'balance': 0})
+    balance = 0
+    for order in orders:
+        balance += order.amount
+    return jsonify({'balance': balance})
+
+@app.route('/user/orders', methods=['GET'])
+@jwt_required()
+def user_orders():
+    """ Returns all the orders for that user """
+    current_user = get_jwt_identity()
+    user = User.query.get(current_user)
+    orders = db.session.query(Product, Order).join(Order).all()
+    if user.role == 'farmer':
+        response = {
+            'Transactions': [
+                {
+                    'order_id': order.id,
+                    'createad_at': order.created_at,
+                    'amount': order.amount,
+                    'status': order.status,
+                    'product_name': product.name,
+                    'buyer_id': order.buyer_id
+                }
+                for product, order in orders
+            ]
+        }
+        return jsonify(response)
+    elif user.role == 'buyer':
+        response = {
+            'Transactions': [
+                {
+                    'order_id': order.id,
+                    'createad_at': order.created_at,
+                    'amount': order.amount,
+                    'status': order.status,
+                    'product_name': product.name,
+                    'farmer_id': order.farmer_id
+                }
+                for product, order in orders
+            ]
+        }
+        return jsonify(response)
+    
