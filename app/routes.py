@@ -543,7 +543,7 @@ def user_orders():
     current_user = get_jwt_identity()
     user = User.query.get(current_user)
     orders = db.session.query(Product, Order).join(Order).all()
-    if user.role == 'farmer':
+    if user.role == 'farmer':      
         response = {
             'Transactions': [
                 {
@@ -602,3 +602,15 @@ def sales_summary():
     else:
         return jsonify({'error': 'Unauthorized user'})
 
+@app.route('/user/product/order/confirmation', methods=['Post'])
+@jwt_required()
+def confirm_order():
+    current_user = get_jwt_identity()
+    data = request.get_json()
+    product_id = data.get('id')
+    order = Order.query.filter_by(buyer_id=current_user).first()
+    if not order:
+        return jsonify({'error': 'No order made for that product'})
+    order.status = 'confirmed'
+    db.session.commit()
+    return jsonify({'message': 'Order confirmed'})
