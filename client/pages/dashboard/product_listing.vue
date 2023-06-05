@@ -33,7 +33,7 @@
 
           <b-input-group class="form-group mb-0">
             <b-form-select
-            v-model="selected"
+            v-model="selectedCategory"
             :options="productCategories"
             class="form-field">
             </b-form-select>
@@ -49,7 +49,7 @@
           cols="1"
           cols-sm="2"
           cols-md="3"
-          cols-lg="4">
+          cols-lg="3">
             <b-col
             v-for="(product, i) in productList"
             :key="i"
@@ -178,12 +178,18 @@ export default {
       productList: [],
       currentPage: 1,
       perPage: 12,
-      selected: null,
+      selectedCategory: null,
       searchInput: '',
       def_option: { value: null, text: 'Please select Category' },
       categories: PRODUCTS_CATEGORIES
     }
   },
+
+  // watch: {
+  //   selectedCategory (val) {
+  //     this.getProductList();
+  //   },
+  // },
 
   computed: {
     rows () {
@@ -234,7 +240,8 @@ export default {
       this.loading = true;
       const pagination = {
         page: page,
-        per_page: this.perPage
+        per_page: this.perPage,
+        // category: this.selectedCategory || 'all'
       }
       try {
         const res = await this.farmerProductList(pagination);

@@ -1,8 +1,8 @@
-"""Create Oder table
+"""your message
 
-Revision ID: 3b8189398e88
+Revision ID: 52fdc4a85ea1
 Revises: 
-Create Date: 2023-06-05 07:55:27.473531
+Create Date: 2023-06-05 12:24:01.257685
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '3b8189398e88'
+revision = '52fdc4a85ea1'
 down_revision = None
 branch_labels = None
 depends_on = None

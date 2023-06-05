@@ -7,7 +7,6 @@
         v-if="orderList.length">
           <order-list-table
           :fields="fields"
-          @confirm-order="updateOrderStatus"
           :table-body="orderList">
           </order-list-table>
         </template>
@@ -51,7 +50,7 @@ export default {
         'product_name',
         'Ship To',
         'status',
-        'action'
+
       ],
     }
   },
@@ -71,17 +70,12 @@ export default {
       userOrderList: 'products/getUserOrderlist'
     }),
 
-    updateOrderStatus (order) {
-      console.log(order);
-    },
-
     async getOrderList () {
       try {
         const res = await this.userOrderList();
         this.orders = res.Transactions;
         if (this.orders.length) {
           this.orders.map(item => {
-            item.action = '';
             item.date = this.$moment(item.createad_at)
             .format("DD.MM.YYYY");
           });

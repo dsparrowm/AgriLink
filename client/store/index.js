@@ -21,6 +21,39 @@ export const actions = {
       });
   },
 
+  async getDashboardBalances (commit, payload) {
+    return await this.$axios
+      .get('/user/sales')
+      .then(res => {
+        return res.data;
+      })
+      .catch(err => {
+        return err;
+      });
+  },
+
+  async getSalesSummary (commit) {
+    return await this.$axios
+      .get('/user/sales')
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        return err;
+      });
+  },
+
+  async getUserBalances (commit, ID) {
+    return await this.$axios
+      .get(`/user/${ID}/balance`)
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        return err;
+      });
+  },
+
   // async login (commit, payload) {
   //   const form = new FormData();
   //   // console.log(form, 'newform');

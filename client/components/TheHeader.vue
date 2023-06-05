@@ -52,7 +52,7 @@
                     :key="i"
                     class="sub-menu__item">
                         <NuxtLink
-                        :to="`/products/?category=${category.text}`"
+                        :to="`/products/?category=${category.value}`"
                         class="sub-pages-links">
                         {{ category.text }}
                         </NuxtLink>

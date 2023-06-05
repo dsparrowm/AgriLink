@@ -110,6 +110,17 @@ export const actions = {
       .catch(err => {
         return err;
       });
+  },
+
+  async confirmOrder (commit, payload) {
+    return await this.$axios
+      .post('/user/product/order/confirmation', payload)
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        return err;
+      });
   }
 };
 

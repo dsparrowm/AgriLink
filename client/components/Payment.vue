@@ -58,6 +58,7 @@ export default {
 
   data () {
     return {
+      isPaymentSuccessful: false,
       alertType: '',
       alertMessage: ''
     }
@@ -85,10 +86,9 @@ export default {
     }),
 
     makePaymentCallback (response) {
-      console.log("Payment callback", response);
+      // check payment status
       if (response.status === 'successful') {
-        // Create new order
-        this.createNewOrder();
+        this.isPaymentSuccessful = true;
       }
     },
 
@@ -104,6 +104,7 @@ export default {
         if (res.status === 200 && res.data.hasOwnProperty('message')) {
           this.alertMessage = res.data.message;
           this.alertType = 'success';
+          this.$router.push('/orders');
         } else {
           this.alertMessage = res.data.message;
           this.alertType = 'danger';
@@ -116,7 +117,10 @@ export default {
     },
 
     closedPaymentModal () {
-      console.log('payment modal is closed');
+      if (this.isPaymentSuccessful) {
+        // Create new order if payment succeed.
+        this.createNewOrder();
+      }
     },
 
     generateReference () {

@@ -43,7 +43,7 @@
         </li>
         <li class="dash-menu__item">
           <NuxtLink class="dash-menu__links"
-          to="/dashboard/orders_listing">
+          to="/dashboard/order_listing">
           <span class="d-flex align-items-center">
             <span class="icon-md">
               <font-awesome-icon :icon="['fas', 'clipboard-list']" />
@@ -54,7 +54,7 @@
           </span>
           </NuxtLink>
         </li>
-        <li class="dash-menu__item">
+        <!-- <li class="dash-menu__item">
           <NuxtLink class="dash-menu__links"
           to="/transactions">
           <span class="d-flex align-items-center">
@@ -72,7 +72,6 @@
           to="/transactions">
           <span class="d-flex align-items-center">
             <span class="icon-md">
-              <!-- <font-awesome-icon icon="sliders"/> -->
               <font-awesome-icon :icon="['fas', 'bell']" />
             </span>
             <span>
@@ -81,7 +80,7 @@
             </span>
           </span>
           </NuxtLink>
-        </li>
+        </li> -->
       </ul>
 
     </div>

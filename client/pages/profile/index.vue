@@ -9,14 +9,18 @@
       </template>
       <div class="upload-img">
         <div 
-        class="upload-img__avatar border"
-        :class="{'border-danger': userImgIsNull}">
+        class="upload-img__avatar border">
         <template 
-        v-if="imgToUpload">
-        {{ imgToUpload }}
+        v-if="userObj.image_url">
+        <img
+          height="100%"
+          width="100%"
+          :src="getImgUrl(userObj.image_url)"
+          v-bind:alt="userObj.image_url">
         </template>
         <template v-else>
-          <img src="../../assets/images/blank-profile-picture.png" alt="Avatar">
+          <img
+          src="../../assets/images/blank-profile-picture.png" alt="Avatar">
         </template>
         </div>
         <div class="upload-img__file">
@@ -164,6 +168,10 @@ export default {
       updateUserInfo: 'updateUserInfo'
     }),
 
+    getImgUrl (url) {
+      return require('../../assets/images/user_images/' + url);
+    },
+
     resetAlertType () {
       this.alertType = '';
     },
@@ -181,7 +189,7 @@ export default {
           this.fileErrorMsg = 'File is too big must be less than 1MB!'
         } else {
           this.imgToUpload = file;
-          this.payload['image_url'] = file;
+          this.payload['image'] = file;
           this.loadingImage = false;
           this.fileError = false;
           this.updateProfile();

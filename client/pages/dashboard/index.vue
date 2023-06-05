@@ -1,9 +1,24 @@
 <template>
   <div class="page-wrapper">
-    <h1>Sales Analytics</h1>
+    <h1>
+      Sales Analytics
+    </h1>
+    <!-- Farmer Sales and Product Perfromance Cards -->
     <div class="performance">
       <div class="performance__row">
-        <div
+        <template
+        v-if="balances">
+          <div class="monthly-card mb-3">
+            <span class="text-muted">
+              Total Balance: 
+            </span>
+            <span class="font-weight-bold text-success">
+              {{ formatNumberAsDecimal(balances.balance) }}
+            </span>
+          </div>
+      </template>
+        <!-- Account balances Section -->
+        <!-- <div
         class="performance__account">
           <div class="left l-flex">
             <div class="total__bal flex-box monthly-card">
@@ -14,7 +29,9 @@
               </div>
               <div>
                 <h6>Total Balances</h6>
-                <span class="font-weight-bold">&#8358;30000</span>
+                <span class="font-weight-bold">
+                  &#8358; {{ formatNumberAsDecimal() }}
+                </span>
               </div>
             </div>
             <div class="available__bal flex-box monthly-card">
@@ -25,7 +42,9 @@
               </div>
               <div>
                 <h6>Available Balance</h6>
-                <span class="font-weight-bold">&#8358;2000</span>
+                <span class="font-weight-bold">
+                  &#8358; {{ formatNumberAsDecimal() }}
+                </span>
               </div>
             </div>
           </div>
@@ -37,50 +56,63 @@
             </div>
             <div>
               <h6>Pending Balance</h6>
-              <span class="font-weight-bold">&#8358;10000</span>
-            </div>
-          </div>
-        </div>
-        <div class="performance__totals">
-          <div class="left l-flex">
-            <div class="total__sales monthly-card flex-box">
-              <div class="icon-wrapper bg-warning">
-                <span class="icon-md">
-                  <font-awesome-icon :icon="['fas', 'dollar-sign']" />
-                </span>
-              </div>
-              <div>
-                <h6>Total Sales</h6>
-                <span class="font-weight-bold">&#8358;3000,0000</span>
-              </div>
-            </div>
-
-            <div class="total__orders monthly-card flex-box">
-              <div class="icon-wrapper bg-success">
-                <span class="icon-md">
-                  <font-awesome-icon icon="shopping-cart"/>
-                </span>
-              </div>
-              <div>
-                <h6>Total Orders</h6>
-                <span class="font-weight-bold">390</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="total__products monthly-card right flex-box">
-            <div class="icon-wrapper bg-primary">
-              <span class="icon-md">
-                <font-awesome-icon icon="shopping-basket"/>
+              <span class="font-weight-bold">
+                &#8358; {{ formatNumberAsDecimal() }}
               </span>
             </div>
-            <div>
-              <h6>Total Products</h6>
-              <span class="font-weight-bold">3000</span>
+          </div>
+        </div> -->
+        <!-- Sales Summary Section -->
+        <template>
+          <div class="performance__totals">
+            <div class="left l-flex">
+              <div class="total__sales monthly-card flex-box">
+                <div class="icon-wrapper bg-warning">
+                  <span class="icon-md">
+                    <font-awesome-icon :icon="['fas', 'dollar-sign']" />
+                  </span>
+                </div>
+                <div>
+                  <h6>Total Sales</h6>
+                  <span class="font-weight-bold">
+                    &#8358; {{ formatNumberAsDecimal(salesSummary.total_sales) }}
+                  </span>
+                </div>
+              </div>
+  
+              <div class="total__orders monthly-card flex-box">
+                <div class="icon-wrapper bg-success">
+                  <span class="icon-md">
+                    <font-awesome-icon icon="shopping-cart"/>
+                  </span>
+                </div>
+                <div>
+                  <h6>Total Orders</h6>
+                  <span class="font-weight-bold">
+                    {{ salesSummary.total_orders || 0 }}
+                  </span>
+                </div>
+              </div>
+            </div>
+  
+            <div class="total__products monthly-card right flex-box">
+              <div class="icon-wrapper bg-primary">
+                <span class="icon-md">
+                  <font-awesome-icon icon="shopping-basket"/>
+                </span>
+              </div>
+              <div>
+                <h6>Total Products</h6>
+                <span class="font-weight-bold">
+                  {{ salesSummary.total_products || 0 }}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        </template>
       </div>
+
+      <!-- Charts Section -->
       <div class="performance__row charts">
         <div class="total_s-chart left">
           <h4>Monthly Revenue</h4>
@@ -119,16 +151,27 @@
     <div class="latest-orders mt-4">
       <h4>Latest orders</h4>
       <div class="latest-orders__table">
-        <b-table responsive="sm" striped hover :items="items"></b-table>
+        <order-list-table
+          :fields="fields"
+          :table-body="orderList">
+        </order-list-table>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import {
+  mapMutations,
+  mapActions,
+  mapGetters
+} from 'vuex';
+import OrderListTable from '../../components/OrderListTable.vue';
 export default {
+  components: { OrderListTable },
   name: 'DashboardIndexPage',
   layout: 'dashboard',
+  middleware: ['auth'],
 
   head: {
     title: 'AgriLink | Dashboard'
@@ -136,12 +179,16 @@ export default {
 
   data () {
     return {
-      items: [
-        { ID: 40, Placed_by: 'Dickerson', email: 'Macdonald@gmail.com', amount: 5000, status: "Delivered", date: '07.05.2020', details: '...' },
-        { ID: 2, Placed_by: 'James', email: 'Macdonald@gmail.com', amount: 5000, status: "Pending", date: '03.05.2020', details: '...' },
-        { ID: 3, Placed_by: 'John', email: 'Macdonald@gmail.com', amount: 5000, status: "Cancel", date: '04.05.2020', details: '...' },
-        { ID: 5, Placed_by: 'Peter', email: 'Macdonald@gmail.com', amount: 5000, status: "Delivered", date: '06.05.2020', details: '...' },
-        { ID: 7, Placed_by: 'Paul', email: 'Macdonald@gmail.com', amount: 5000, status: "Cancel", date: '08.05.2020', details: '...' }
+      balances: {},
+      salesSummary: {},
+      orders: [],
+      fields: [
+        {key: 'order_id', label: 'Order #'},
+        'date',
+        'amount',
+        'product_name',
+        'Ship To',
+        'status',
       ],
       barChartOptions: {
         responsive: true,
@@ -186,7 +233,71 @@ export default {
     }
   },
 
+  computed: {
+    ...mapGetters({
+      userObj: 'loggedInUser'
+    }),
+
+    orderList () {
+      return this.orders;
+    }
+  },
+
+  methods: {
+    ...mapActions({
+      userOrderList: 'products/getUserOrderlist',
+      getSalesSummary: 'getSalesSummary',
+      getUserBalances: 'getUserBalances',
+    }),
+      
+    async fetchSalesSummary () {
+      try {
+        const res = await this.getSalesSummary();
+        if (res.status === 200) {
+          this.salesSummary = res.data;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async fetchUserBalances () {
+      try {
+        const res = await this.getUserBalances(this.userObj.id);
+        if (res.status === 200) {
+          this.balances = res.data;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async getOrderList () {
+      try {
+        const res = await this.userOrderList();
+        this.orders = res.Transactions;
+        if (this.orders.length) {
+          this.orders.map(item => {
+            item.date = this.$moment(item.createad_at)
+            .format("DD.MM.YYYY");
+          });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    formatNumberAsDecimal (val = 0) {
+      return parseFloat(val)
+        .toFixed(2)
+        .replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    }
+  },
+
   mounted () {
+    this.fetchUserBalances();
+    this.fetchSalesSummary();
+    this.getOrderList();
     this.totalSalesData = {
       // labels: [...(this.sales && this.sales.map((item) => item.name))],
       // datasets: [

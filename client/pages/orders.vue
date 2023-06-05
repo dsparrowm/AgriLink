@@ -18,6 +18,13 @@
           </NuxtLink>
         </div>
       </template>
+      <template>
+      <message-alert
+      @resetAlertType="resetAlertType"
+      :alertType="alertType"
+      :message="alertMessage">
+      </message-alert>
+    </template>
     </div>
   </b-container>
 </template>
@@ -28,9 +35,10 @@ import {
   mapActions,
   mapGetters
 } from 'vuex';
+import MessageAlert from '../components/Modals/MessageAlert.vue';
 import OrderListTable from '../components/OrderListTable.vue';
 export default {
-  components: { OrderListTable },
+  components: { OrderListTable, MessageAlert },
   name: 'CustomerOrderListingPage',
   layout: 'main',
   middleware: ['auth'],
@@ -41,6 +49,8 @@ export default {
 
   data () {
     return {
+      alertType: '',
+      alertMessage: '',
       orders: [],
       fields: [
         {key: 'order_id', label: 'Order #'},
@@ -65,11 +75,31 @@ export default {
 
   methods: {
     ...mapActions({
-      userOrderList: 'products/getUserOrderlist'
+      userOrderList: 'products/getUserOrderlist',
+      confirmOrder: 'products/confirmOrder'
     }),
 
-    updateOrderStatus (order) {
-      console.log(order);
+    resetAlertType () {
+      this.alertType = '';
+    },
+
+    async updateOrderStatus (order) {
+      try {
+        order.status = 'confirmed';
+        const res = await this.confirmOrder({id: order.order_id});
+        if (res.status === 200 && res.data.hasOwnProperty('message')) {
+          this.alertMessage = res.data.message;
+          this.alertType = 'success';
+        } else {
+          this.alertMessage = res.data.message;
+          this.alertType = 'danger';
+        }
+        
+      } catch (error) {
+        this.alertMessage = error.message;
+        this.alertType = 'danger';
+        console.error(error);
+      }
     },
 
     async getOrderList () {

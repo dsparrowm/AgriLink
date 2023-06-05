@@ -7,8 +7,6 @@
 </template>
 
 <script>
-import cssVars from '~/utils/cssVariables.json';
-
 export default {
   name: 'DefaultLayout'
 

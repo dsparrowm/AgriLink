@@ -19,8 +19,8 @@
         <span
         class="rounded text-white p-1"
         :class="{
-        'bg-success': row.item.status === 'completed',
-        'bg-danger': row.item.status !== 'completed'}
+        'bg-success': row.item.status === 'confirmed',
+        'bg-danger': row.item.status !== 'confirmed'}
         ">
           {{ row.item.status }}
         </span>

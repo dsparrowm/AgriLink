@@ -174,7 +174,7 @@ export default {
         price: '',
         image: '',
         quantity: '',
-        category: ''
+        category: null
       },
       productID: this.$route.query.ID,
       selectedCategory: null,
