@@ -11,7 +11,7 @@
           </order-list-table>
         </template>
         <template v-else>
-          <div class="text-enter">
+          <div class="text-center">
             No Order yet.
             <NuxtLink to="/products">
               Create one now
@@ -50,7 +50,6 @@ export default {
         'product_name',
         'Ship To',
         'status',
-
       ],
     }
   },

@@ -10,8 +10,9 @@
       <div class="upload-img">
         <div 
         class="upload-img__avatar border">
-        <template 
-        v-if="userObj.image_url">
+
+        <template
+        v-if="!userImgIsNull">
         <img
           height="100%"
           width="100%"
@@ -83,11 +84,14 @@
           </article>
         </div>
       </div>
-      <b-button
-      href="/orders"
-      class="btn profile__trans">
-        View Order History
-      </b-button>
+      <template
+       v-if="userObj.role === 'buyer'">
+        <b-button
+        href="/orders"
+        class="btn profile__trans">
+          View Order History
+        </b-button>
+      </template>
     </div>
     <!-- User Information Update Form -->
     <template v-if="showUpdateForm">
@@ -139,7 +143,6 @@ export default {
       fileError: false,
       fileErrorMsg: '',
       showUpdateForm: false,
-      imgToUpload: null,
       inputData: '',
       payload: {},
       selectedKey: '',
@@ -169,7 +172,7 @@ export default {
     }),
 
     getImgUrl (url) {
-      return require('../../assets/images/user_images/' + url);
+      return require('~/assets/images/user_images/' + url);
     },
 
     resetAlertType () {
@@ -188,7 +191,8 @@ export default {
           this.fileError = true;
           this.fileErrorMsg = 'File is too big must be less than 1MB!'
         } else {
-          this.imgToUpload = file;
+          this.imgToUpload = file.name;
+          console.log(this.imgToUpload);
           this.payload['image'] = file;
           this.loadingImage = false;
           this.fileError = false;
@@ -218,7 +222,7 @@ export default {
           this.alertType = 'success';
           await this.$auth.fetchUser();
         } else {
-          this.alertMessage = res.data.message;
+          this.alertMessage = res.data.error;
           this.alertType = 'danger';
         }
       } catch (error) {

@@ -21,6 +21,7 @@
             type="text"
             placeholder="Enter title"
             class="form-field w-100"
+            required
             v-model="productInfo.name">
             </b-form-input>
           </b-input-group>
@@ -35,7 +36,8 @@
             type="text"
             placeholder="Enter price"
             class="form-field w-100"
-            v-model="productInfo.price">
+            v-model="productInfo.price"
+            required>
             </b-form-input>
           </b-input-group>
   
@@ -49,7 +51,8 @@
             type="text"
             placeholder="Enter quantity"
             class="form-field w-100"
-            v-model="productInfo.quantity">
+            v-model="productInfo.quantity"
+            required>
             </b-form-input>
           </b-input-group>
   
@@ -65,6 +68,7 @@
               class="form-field w-100"
               rows="3"
               max-rows="6"
+              required
             ></b-form-textarea>
           </b-input-group>
   
@@ -130,6 +134,7 @@
             id="product-category"
             v-model="productInfo.category"
             :options="productCategories"
+            required
             class="form-field w-100">
             </b-form-select>
           </b-input-group>
@@ -224,7 +229,7 @@ export default {
           this.alertType = 'success';
           this.resetForm();
         } else {
-          this.alertMessage = res.data.message;
+          this.alertMessage = res.data.error;
           this.alertType = 'danger';
         }
       } catch (error) {
@@ -284,7 +289,7 @@ export default {
           this.alertMessage = res.data.message;
           this.alertType = 'success';
         } else {
-          this.alertMessage = res.data.message;
+          this.alertMessage = res.data.error;
           this.alertType = 'danger';
         }
       } catch (error) {

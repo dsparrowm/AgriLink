@@ -106,7 +106,7 @@ export default {
           this.alertType = 'success';
           this.$router.push('/orders');
         } else {
-          this.alertMessage = res.data.message;
+          this.alertMessage = res.data.error;
           this.alertType = 'danger';
         }
       } catch (error) {

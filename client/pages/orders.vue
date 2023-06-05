@@ -11,7 +11,7 @@
         </order-list-table>
       </template>
       <template v-else>
-        <div class="text-enter">
+        <div class="text-center">
           No Order yet.
           <NuxtLink to="/products">
             Create one now
@@ -91,7 +91,7 @@ export default {
           this.alertMessage = res.data.message;
           this.alertType = 'success';
         } else {
-          this.alertMessage = res.data.message;
+          this.alertMessage = res.data.error;
           this.alertType = 'danger';
         }
         

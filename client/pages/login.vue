@@ -63,7 +63,7 @@
 import { mapGetters } from 'vuex';
 import MessageAlert from '../components/Modals/MessageAlert.vue';
 export default {
-  components: { MessageAlert },
+    components: { MessageAlert },
     name: 'LoginPage',
     layout: 'main',
 
