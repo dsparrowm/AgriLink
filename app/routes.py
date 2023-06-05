@@ -242,6 +242,30 @@ def get_category():
     start_index = (page - 1) * per_page
     end_index = start_index + per_page
 
+    if category == 'all':
+        products = Product.query.all()
+        total_items = len(products)
+        total_pages = (total_items // per_page) + (1 if total_items % per_page > 0 else 0)
+        paginated_products = products[start_index:end_index]
+        response = {
+                'products': [
+                    {
+                        'id': product.id,
+                        'name': product.name,
+                        'price': product.price,
+                        'quantity': product.quantity,
+                        'image_url': product.image_url,
+                        'description': product.description,
+                    }
+                    for product in paginated_products
+                ],
+                'page': page,
+                'per_page': per_page,
+                'total_items': total_items,
+                'total_pages': total_pages
+            }
+        return jsonify(response)
+
     categories = Category.query.filter_by(name=category).first()
     if not categories:
         return jsonify({'error': 'no products from this category'})
@@ -433,6 +457,33 @@ def user_products():
     start_index = (page - 1) * per_page
     end_index = start_index + per_page
 
+    if 'category' in request.args:
+        data = request.args.get('category')
+        category = Category.query.filter_by(name=data).first()
+        if not category:
+            return jsonify({'message': 'No products listed in this Category'})
+        products = Product.query.filter_by(category_id=category.id).all()
+        total_items = len(products)
+        total_pages = (total_items // per_page) + (1 if total_items % per_page > 0 else 0)
+        paginated_products = products[start_index:end_index]
+        response = {
+                'products': [
+                    {
+                        'id': product.id,
+                        'name': product.name,
+                        'price': product.price,
+                        'quantity': product.quantity,
+                        'image_url': product.image_url,
+                        'description': product.description,
+                    }
+                    for product in paginated_products
+                ],
+                'page': page,
+                'per_page': per_page,
+                'total_items': total_items,
+                'total_pages': total_pages
+            }
+        return jsonify(response)
     products = db.session.query(Product, Category).join(Category).all()
     total_items = len(products)
     total_pages = (total_items // per_page) + (1 if total_items % per_page > 0 else 0)
@@ -607,8 +658,8 @@ def sales_summary():
 def confirm_order():
     current_user = get_jwt_identity()
     data = request.get_json()
-    product_id = data.get('id')
-    order = Order.query.filter_by(buyer_id=current_user).first()
+    order_id = data.get('id')
+    order = Order.query.filter_by(id=order_id).first()
     if not order:
         return jsonify({'error': 'No order made for that product'})
     order.status = 'confirmed'
