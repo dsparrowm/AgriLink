@@ -1,8 +1,8 @@
-"""added multiple schemas
+"""added multiple database schemas
 
-Revision ID: d50a30eac080
+Revision ID: 423bf43fbbe4
 Revises: 
-Create Date: 2023-06-03 21:39:39.806697
+Create Date: 2023-06-05 21:15:23.908314
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd50a30eac080'
+revision = '423bf43fbbe4'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -63,6 +63,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('product_id', sa.Integer(), nullable=True),
     sa.Column('buyer_id', sa.Integer(), nullable=True),
+    sa.Column('buyer_name', sa.String(length=100), nullable=False),
     sa.Column('farmer_id', sa.Integer(), nullable=True),
     sa.Column('amount', sa.Integer(), nullable=False),
     sa.Column('status', sa.String(length=15), nullable=True),

@@ -64,6 +64,7 @@ class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey('Product.id'))
     buyer_id = db.Column(db.Integer, db.ForeignKey('User.id'))
+    buyer_name = db.Column(db.String(100), nullable=False)
     farmer_id = db.Column(db.Integer, db.ForeignKey('Farmer.id'))
     amount = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(15), default='pending')

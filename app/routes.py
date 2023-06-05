@@ -306,8 +306,6 @@ def update_product(id):
 	    :return: A JSON response indicating success or failure in updating the product.
 	"""
     current_user = get_jwt_identity()
-    if current_user != id:
-        return jsonify({'error': 'Unauthorized'})
     user = User.query.get(current_user)
     if not user:
         return jsonify({'error': 'user not found'})
@@ -556,10 +554,13 @@ def completed_order():
     if not product:
         return jsonify({'error': 'Product not found'})
     farmer = Farmer.query.filter_by(user_id=product.farmer_id).first()
+    if not farmer:
+        return jsonify({'error': 'no farmer found'})
     order = Order(product_id=product.id,
                   buyer_id=current_user,
                   farmer_id=farmer.user_id,
-                  amount=product.price
+                  amount=product.price,
+                  buyer_name=user.first_name
                 )
     db.session.add(order)
     db.session.commit()
@@ -603,7 +604,8 @@ def user_orders():
                     'amount': order.amount,
                     'status': order.status,
                     'product_name': product.name,
-                    'buyer_id': order.buyer_id
+                    'buyer_id': order.buyer_id,
+                    'buyer_name': order.buyer_name
                 }
                 for product, order in orders
             ]
