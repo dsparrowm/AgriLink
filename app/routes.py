@@ -19,9 +19,26 @@ def status():
 
 @app.route('/login', methods=['POST'])
 def login():
-    """checks if user is valid and found in the database
-    then creates a jwt token for that user and returns a 
-    response to the client containing the the user token"""
+    """
+        Login endpoint that receives a POST request with the user's email and password. 
+        It returns a JSON object with the message 'Login successful', an access token, and the user's ID 
+        if the email and password are valid. If they are invalid, it returns a JSON object with the message 
+        'Invalid email or password' and a 401 status code. 
+
+        Parameters:
+        None
+
+        Returns:
+            A tuple in the form of a JSON object with keys 'message', 'token', and 'user_id' for a successful login 
+            or a JSON object with key 'message' and a 401 status code for an unsuccessful login.
+
+    Example:
+    {
+        'message': 'Login successful',
+        'token': 'example_token',
+        'user_id': 1
+    }
+    """
     form_email = request.form.get('email')
     form_password = request.form.get('password')
     user = User.query.filter_by(email=form_email).first()
@@ -35,8 +52,18 @@ def login():
 
 @app.route('/register', methods=['POST'])
 def register():
-    """Handles registration form sent from the frontend
-    and stores in the database
+    """
+        Registers a new user with the provided information in the request form data. 
+        If the user is successfully registered, a farmer or buyer object is also created
+        depending on the role provided in the form data. 
+
+        Parameters:
+        None
+
+        Returns:
+            A JSON response containing a message indicating whether the registration was successful 
+            or if the user already exists. HTTP status code 200 is returned if registration is successful, 
+            and 403 if the user already exists.
     """
     first_name = request.form.get('first_name')
     last_name = request.form.get('last_name')
@@ -79,8 +106,13 @@ def register():
 @app.route('/user', methods=['GET'])
 @jwt_required()
 def user_info():
-    """validates jwt token received from the client
-    and returns the user info to the client"""
+    """
+	    Route that returns the user information. Uses the JWT token to retrieve the current user's info
+        from the database.
+
+	    :return: A JSON object with the user's id, first name, last name, email, phone, role, and
+        image URL.
+	"""
     current_user = get_jwt_identity()
     user = User.query.get(current_user)
     return jsonify({'id': user.id,
@@ -96,6 +128,19 @@ def user_info():
 @app.route('/updateUserInfo/<int:id>', methods=['POST'])
 @jwt_required()
 def update_user(id):
+    """
+        Updates the user information of the specified user.
+
+        Args:
+            id (int): The user ID to update.
+
+        Returns:
+            json: A JSON object containing a message indicating whether the update was successful or not.
+
+        Raises:
+            HTTPException: If authorization fails or user is not found.
+
+    """
     current_user = get_jwt_identity()
     if current_user != id:
         return jsonify({'error': 'Unauthorized'}), 401
@@ -149,6 +194,18 @@ def update_user(id):
 
 @app.route('/product/<int:id>', methods=['GET'])
 def get_product(id):
+    """
+        Returns a JSON representation of a product with the given id.
+    
+        Parameters:
+        id (int): The id of the product to retrieve.
+    
+        Returns:
+            If a product with the given id exists, returns a JSON representation of the product,
+            including its id, name, price, quantity, image url, category name, category id, and description.
+            If no product is found, 
+            returns a JSON object with an error message.
+    """
     product = Product.query.get(id)
     if not product:
         return jsonify({'error': 'no product found'})
@@ -170,6 +227,14 @@ def get_product(id):
 
 @app.route('/products/category', methods=['GET'])
 def get_category():
+    """
+        Retrieves a paginated list of products based on a category.
+
+        :return: A JSON object with a paginated list of products according to the parameters
+                passed. The object has the following keys: 'products', 'page', 'per_page', 
+                'total_items', and 'total_pages'.
+        :rtype: JSON
+    """
     page = int(request.args.get('page', 1))
     per_page = int(request.args.get('per_page', 10))
     category = request.args.get('category')
@@ -206,7 +271,16 @@ def get_category():
 @app.route('/product/<int:id>/update', methods=['PUT'])
 @jwt_required()
 def update_product(id):
-    """enables farmers to update the details of their products"""
+    """
+	    Update the product with the given ID. Requires the user to be authenticated and
+	    authorized to update the specified product. The product can be updated with a new
+	    name, price, quantity, category, description, or image. If the image is updated,
+	    it must be a valid file format and saved to the product image folder. Returns a JSON
+	    response indicating success or failure in updating the product.
+
+	    :param id: The ID of the product to be updated.
+	    :return: A JSON response indicating success or failure in updating the product.
+	"""
     current_user = get_jwt_identity()
     if current_user != id:
         return jsonify({'error': 'Unauthorized'})
@@ -253,7 +327,17 @@ def update_product(id):
 @app.route('/product/upload', methods=['POST'])
 @jwt_required()
 def add_product():
-    """enables a farmer to create and list new products"""
+    """
+	    Adds a new product to the database, given the product details and image file.
+	
+	    Args:
+	        None.
+	
+	    Returns:
+	        A JSON object containing a message indicating whether the product was 
+	        uploaded successfully or not, along with the name, category, and price 
+	        of the product if successful, or an error message if unsuccessful.
+	"""
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
     if not user:
@@ -325,6 +409,17 @@ def delete_product(id):
 @app.route('/user/products', methods=['GET'])
 @jwt_required()
 def user_products():
+    """
+        Retrieves a paginated list of products belonging to a user who is authenticated 
+        and authorized as a farmer. The products are retrieved from the database and 
+        paginated according to the request parameters 'page' and 'per_page'. The retrieved 
+        products along with pagination details such as total number of pages and total 
+        number of items are returned as a JSON response. 
+
+        Returns:
+            A JSON response containing a paginated list of products, pagination details such 
+            as total number of pages and total number of items.
+    """
     current_user = get_jwt_identity()
     user = User.query.get(current_user)
     if not user:
@@ -363,6 +458,21 @@ def user_products():
     return jsonify(response)
 @app.route('/product/<int:id>/farmer', methods=['GET'])
 def get_product_farmer_details(id):
+    """
+        Returns the details of the farmer who sold the product with the given ID.
+    
+        Args:
+            id (int): The ID of the product to get farmer details for.
+    
+        Returns:
+            A JSON object containing the following keys:
+            - id (int): The ID of the farmer.
+            - first_name (str): The first name of the farmer.
+            - last_name (str): The last name of the farmer.
+            - phone (str): The phone number of the farmer.
+            - location (str): The location of the farmer.
+            If the product is not found, a JSON object containing an error message.
+    """
     product = Product.query.get(id)
     if not product:
         return jsonify({'error': 'Product not found'})
@@ -378,6 +488,15 @@ def get_product_farmer_details(id):
 @app.route('/user/product/order', methods=['POST'])
 @jwt_required()
 def completed_order():
+    """
+        This function is a Flask endpoint that handles completed orders. It accepts a POST request
+        to /user/product/order with a JSON body containing the product_id and requires
+        a valid JWT token for authorization. It retrieves the current user's identity, the product_id
+        from the request's JSON body, and the User, Product, and Farmer objects associated with the
+        current user and product_id. If the product is not found, it returns a JSON error message.
+        Otherwise, it creates an Order object and adds it to the database, then returns a JSON success
+        message. This function does not take any parameters and returns a JSON response.
+    """
     current_user = get_jwt_identity()
     data = request.get_json()
     product_id = data.get('product_id')
@@ -398,6 +517,14 @@ def completed_order():
 @app.route('/user/<int:id>/balance', methods=['GET'])
 @jwt_required()
 def farmer_balance_info(id):
+    """
+        Returns the balance information of a farmer with the given ID. 
+
+        :param id: int representing the ID of the farmer.
+        :type id: int
+
+        :return: A JSON object containing the balance of the farmer.
+    """
     current_user = get_jwt_identity()
     if current_user != id:
         return jsonify({'error': 'Unauthorized user'})
@@ -447,3 +574,31 @@ def user_orders():
         }
         return jsonify(response)
     
+@app.route('/user/sales', methods=['GET'])
+@jwt_required()
+def sales_summary():
+    """
+        Returns the sales summary of a user. If the user's role is "farmer",
+        it returns their total sales, total orders, and total products. Otherwise, it returns
+        an error message. 
+        :return: JSON object containing total_sales (int), total_orders (int), and total_products (int) 
+        or an error message (str).
+    """
+    current_user = get_jwt_identity()
+    user = User.query.get(current_user)
+    if user.role == 'farmer':
+        total_sales = 0
+        orders = Order.query.filter_by(farmer_id=user.id).all()
+        for order in orders:
+            total_sales += order.amount
+        farmer_orders = Order.query.filter_by(farmer_id=user.id).all()
+        total_orders = len(farmer_orders)
+        farmer_products = Product.query.filter_by(farmer_id=user.id).all()
+        total_products = len(farmer_products)
+        return jsonify({'total_sales': total_sales,
+                        'total_orders': total_orders,
+                        'total_products': total_products
+                    })
+    else:
+        return jsonify({'error': 'Unauthorized user'})
+
