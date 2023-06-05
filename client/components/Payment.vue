@@ -87,7 +87,7 @@ export default {
     makePaymentCallback (response) {
       console.log("Payment callback", response);
       if (response.status === 'successful') {
-        // Naw order creation
+        // Create new order
         this.createNewOrder();
       }
     },

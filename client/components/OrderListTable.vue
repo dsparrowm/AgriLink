@@ -5,18 +5,26 @@
       <b-table
       striped
       hover
+      :fields="fields"
       :items="tableBody">
-        <template
-         #cell(status)="row">
-          <span
-          class="rounded text-white p-1"
-          :class="{
-          'bg-success': row.item.status === 'completed',
-          'bg-danger': row.item.status !== 'completed'}
-          ">
-            {{ row.item.status }}
-          </span>
-        </template>
+      
+      <template
+       #cell(amount)="row">
+        <span>
+          &#8358;{{ row.item.amount }}
+        </span>
+      </template>
+      <template
+       #cell(status)="row">
+        <span
+        class="rounded text-white p-1"
+        :class="{
+        'bg-success': row.item.status === 'completed',
+        'bg-danger': row.item.status !== 'completed'}
+        ">
+          {{ row.item.status }}
+        </span>
+      </template>
   
         <template #cell(action)="row">
             <template
@@ -25,7 +33,7 @@
               size="sm"
               class="btn confirm-btn"
               :disabled="row.item.status === 'completed'"
-              @click="updateOrderStatus(row)">
+              @click="updateOrderStatus(row.item)">
                 Confirm
               </b-button>
             </template>
@@ -33,7 +41,7 @@
       </b-table>
     </div>
     <!-- Will only render on small screens -->
-    <div class="my-orders__items">
+    <div class="my-orders__items p-2">
       <article
       v-for="(item, i) in tableBody" :key="i">
       <!-- {{ item }} -->
@@ -41,19 +49,31 @@
           <span class="font-weight-bold mr-2">Order #:</span> {{ item.order_id }}
         </p>
         <p class="m-0">
-          <span class="font-weight-bold mr-2">Date:</span> {{ item.createad_at }}
+          <span class="font-weight-bold mr-2">Date:</span> {{ item.date }}
         </p>
-        <p class="m-0">
+        <!-- <p class="m-0">
           <span class="font-weight-bold mr-2">Ship To:</span> {{ item.ship_to }}
-        </p>
+        </p> -->
         <p class="m-0">
           <span class="font-weight-bold mr-2">Product Name:</span> {{ item.product_name }}
         </p>
         <p class="m-0">
-          <span class="font-weight-bold mr-2">Amount:</span> {{ item.amount }}
+          <span class="font-weight-bold mr-2">Amount:</span> &#8358;{{ item.amount }}
         </p>
         <p class="m-0">
           <span class="font-weight-bold mr-2">Status:</span> {{ item.status }}
+        </p>
+        <p 
+        v-if="item.status !== 'completed'"
+        class="m-0">
+          <span class="font-weight-bold mr-2">Action:</span>
+          <b-button
+            size="sm"
+            class="btn confirm-btn"
+            :disabled="item.status === 'completed'"
+            @click="updateOrderStatus(item)">
+              Confirm
+          </b-button>
         </p>
       </article>
     </div>
@@ -68,16 +88,17 @@ export default {
       type: Array,
       required: true,
       default: []
+    },
+
+    fields : {
+      type: Array,
+      required: true
     }
   },
-  data () {
-    return {
-      
-    }
-  },
+
   methods: {
     updateOrderStatus (order) {
-      console.log(order);
+      this.$emit('confirm-order', order);
     }
   }
 }
@@ -87,9 +108,10 @@ export default {
 .my-orders__table {
   display: none;
 }
-.my-orders__items article {
-  margin-bottom: 2rem;
+.my-orders__items > * + * {
+  margin-top: 2rem;
 }
+
 /* Applies to medium to large screen sizes */
 @media (min-width: 48.0625em) {
   .my-orders__table {

@@ -41,6 +41,7 @@
           class="product mb-3">
           <div>
               <b-card
+                no-body
                 tag="article"
                 class="product__card"
               >
@@ -53,26 +54,28 @@
                   :src="getImgUrl(product.image_url)"
                   v-bind:alt="product.image_url">
                 </div>
-                <b-card-text 
-                class="d-flex justify-content-between mb-0">
-                  <b-card-text class="font-weight-bold mb-0">
-                    {{ product.name }}
+                <div class="p-2">
+                  <b-card-text 
+                  class="d-flex justify-content-between mb-0">
+                    <b-card-text class="font-weight-bold mb-0">
+                      {{ product.name }}
+                    </b-card-text>
+                    <b-card-text class="small text-muted">
+                      &#8358;{{ product.price }}
+                    </b-card-text>
                   </b-card-text>
-                  <b-card-text class="small text-muted">
-                    &#8358; {{ product.price }}
+                  <b-card-text class="mb-0 text-muted small fs-6">
+                    {{product.quantity}} In stock
                   </b-card-text>
-                </b-card-text>
-                <b-card-text class="mb-0 text-muted small fs-6">
-                  {{product.quantity}} In stock
-                </b-card-text>
-                <b-card-text class="small mb-0">
-                {{ product.description.slice(0, 30) + '...' }}
-                <NuxtLink
-                :to="`/product/${product.id}`"
-                class="card__link text-muted small fs-6">
-                  view more
-                </NuxtLink>
-                </b-card-text>
+                  <b-card-text class="small mb-0">
+                  {{ product.description.slice(0, 30) + '...' }}
+                  <NuxtLink
+                  :to="`/product/${product.id}`"
+                  class="card__link text-muted small fs-6">
+                    view more
+                  </NuxtLink>
+                  </b-card-text>
+                </div>
               </b-link>
                 <template #footer>
                   <template

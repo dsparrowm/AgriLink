@@ -1,8 +1,8 @@
-"""added multiple schemas
+"""Create Oder table
 
-Revision ID: d50a30eac080
+Revision ID: 3b8189398e88
 Revises: 
-Create Date: 2023-06-03 21:39:39.806697
+Create Date: 2023-06-05 07:55:27.473531
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd50a30eac080'
+revision = '3b8189398e88'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -35,9 +35,7 @@ def upgrade():
     sa.Column('image_url', sa.String(length=250), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    with op.batch_alter_table('User', schema=None) as batch_op:
-        batch_op.create_index(batch_op.f('ix_User_email'), ['email'], unique=True)
-
+    op.create_index(op.f('ix_User_email'), 'User', ['email'], unique=True)
     op.create_table('Farmer',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('location', sa.String(), nullable=True),
@@ -80,9 +78,7 @@ def downgrade():
     op.drop_table('Order')
     op.drop_table('Product')
     op.drop_table('Farmer')
-    with op.batch_alter_table('User', schema=None) as batch_op:
-        batch_op.drop_index(batch_op.f('ix_User_email'))
-
+    op.drop_index(op.f('ix_User_email'), table_name='User')
     op.drop_table('User')
     op.drop_table('Category')
     # ### end Alembic commands ###

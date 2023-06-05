@@ -1,23 +1,25 @@
 <template>
   <b-container>
-    <div class="my-orders">
-      <h1>My Orders</h1>
-      <template
-      v-if="orderList.length">
-        <order-list-table
-        :fields="fields"
-        @confirm-order="updateOrderStatus"
-        :table-body="orderList">
-        </order-list-table>
-      </template>
-      <template v-else>
-        <div class="text-enter">
-          No Order yet.
-          <NuxtLink to="/products">
-            Create one now
-          </NuxtLink>
-        </div>
-      </template>
+    <div class="my-orders page-wrapper">
+      <h1>Order Details</h1>
+      <div class="order-details">
+        <template
+        v-if="orderList.length">
+          <order-list-table
+          :fields="fields"
+          @confirm-order="updateOrderStatus"
+          :table-body="orderList">
+          </order-list-table>
+        </template>
+        <template v-else>
+          <div class="text-enter">
+            No Order yet.
+            <NuxtLink to="/products">
+              Create one now
+            </NuxtLink>
+          </div>
+        </template>
+      </div>
     </div>
   </b-container>
 </template>
@@ -28,11 +30,11 @@ import {
   mapActions,
   mapGetters
 } from 'vuex';
-import OrderListTable from '../components/OrderListTable.vue';
+import OrderListTable from '../../components/OrderListTable.vue';
 export default {
   components: { OrderListTable },
-  name: 'CustomerOrderListingPage',
-  layout: 'main',
+  name: 'FarmersOrderListingPage',
+  layout: 'dashboard',
   middleware: ['auth'],
 
   head: {
@@ -47,6 +49,7 @@ export default {
         'date',
         'amount',
         'product_name',
+        'Ship To',
         'status',
         'action'
       ],
@@ -99,5 +102,11 @@ export default {
 <style scoped>
 .my-orders {
   margin: 3rem auto;
+}
+.order-details {
+  background-color: var(--clr-ntrl-min);
+  border-radius: 5px;
+  box-shadow: 0.5px 0.5px 5px 0.5px #e0dfdf;
+  margin-top: 2rem;
 }
 </style>
