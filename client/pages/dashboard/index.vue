@@ -187,7 +187,7 @@ export default {
         'date',
         'amount',
         'product_name',
-        'Ship To',
+        'buyer_name',
         'status',
       ],
       barChartOptions: {

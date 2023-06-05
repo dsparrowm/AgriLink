@@ -555,10 +555,13 @@ def completed_order():
     if not product:
         return jsonify({'error': 'Product not found'})
     farmer = Farmer.query.filter_by(user_id=product.farmer_id).first()
+    if not farmer:
+        return jsonify({'error': 'no farmer found'})
     order = Order(product_id=product.id,
                   buyer_id=current_user,
                   farmer_id=farmer.user_id,
-                  amount=product.price
+                  amount=product.price,
+                  buyer_name=user.first_name
                 )
     db.session.add(order)
     db.session.commit()
@@ -602,7 +605,8 @@ def user_orders():
                     'amount': order.amount,
                     'status': order.status,
                     'product_name': product.name,
-                    'buyer_id': order.buyer_id
+                    'buyer_id': order.buyer_id,
+                    'buyer_name': order.buyer_name
                 }
                 for product, order in orders
             ]
