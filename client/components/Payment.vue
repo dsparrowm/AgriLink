@@ -24,7 +24,7 @@
       }"
       :callback="makePaymentCallback"
       :onclose="closedPaymentModal"
-    >   Click To Pay
+    >    Buy Now
     </flutterwave-pay-button>
     <template>
       <message-alert

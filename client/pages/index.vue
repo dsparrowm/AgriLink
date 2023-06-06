@@ -131,6 +131,7 @@
                 class="booms__card shadow rounded"
                 img-src="../assets/images/cms-banner-1.jpg"
                 img-alt="Image"
+                img-height="422"
                 img-top
               >
               <b-card-text class="my-3">
@@ -152,6 +153,7 @@
                 class="booms__card shadow rounded"
                 img-src="../assets/images/cms-banner-2.jpg"
                 img-alt="Image"
+                img-height="422"
                 img-top
               >
               <b-card-text class="my-3">
@@ -173,6 +175,7 @@
                 class="booms__card shadow rounded"
                 img-src="../assets/images/shopper-img.jpg"
                 img-alt="Image"
+                img-height="422"
                 img-top
               >
               <b-card-text class="my-3">

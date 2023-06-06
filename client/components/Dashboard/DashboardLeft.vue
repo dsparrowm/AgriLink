@@ -11,6 +11,13 @@
       <div class="admin-lable ml-2 p-2">
         {{ `${user.first_name} ${user.last_name}` }}
       </div>
+      <div class="ml-auto mr-2">
+        <NuxtLink 
+        to="/"
+        class="icon-sm home__links">
+          <font-awesome-icon icon="home"/> 
+        </NuxtLink>
+      </div>
     </div>
     <div class="dash-menu">
       <ul role="list"
@@ -119,6 +126,10 @@ export default {
 
 .admin {
   box-shadow: 0.5px 0.5px 5px 0.5px #e0dfdf;
+}
+
+.home__links {
+  color: var(--clr-ntrl-max);
 }
 
 .dash-menu__links {

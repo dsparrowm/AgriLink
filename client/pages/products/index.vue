@@ -32,8 +32,8 @@
         <b-row
         cols="1"
         cols-sm="2"
-        cols-md="2"
-        cols-lg="3"
+        cols-md="3"
+        cols-lg="5"
         class="products">
           <b-col
           v-for="(product, i) in productList"
