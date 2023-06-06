@@ -157,15 +157,7 @@ export default {
   watch: {
     'formData.role' (val) {
       this.isFarmer = val === 'farmer' ? true : false;
-    },
-
-    loggedInUser (user) {
-      if (user && user.role === 'farmer') {
-        this.$router.push('/dashboard');
-      } else {
-        this.$router.push('/products');
-      }
-    }     
+    }   
   },
   methods: {
     ...mapActions({
@@ -201,12 +193,9 @@ export default {
           const form = new FormData();
           form.append('email', this.formData['email']);
           form.append('password', this.formData['password']);
-          const user = await  this.$auth.loginWith('local', {
-            data: form
-          });
-
           this.alertMessage = res.message;
           this.alertType = 'success';
+          this.$router.push('/login');
         } else {
           this.alertMessage = 'user already exists';
           this.alertType = 'danger';

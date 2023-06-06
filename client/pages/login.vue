@@ -85,7 +85,7 @@ export default {
         loggedInUser (user) {
             if (user.role === 'farmer') {
                 this.$router.push('/dashboard');
-            } else {
+            } else if (user.role === 'buyer') {
                 this.$router.push('/products');
             }
         }
