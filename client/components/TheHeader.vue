@@ -1,124 +1,128 @@
 <template>
-  <header id="AppHeader" class="site-container">
-    <NuxtLink to="/" class="logo">
-        Logo
-    </NuxtLink>
-    <div class="menu">
-        <ul class="menu__list"
-        :class="{
-            'menu__list--show': showMenu,
-            'menu__list--hide': !showMenu
-        }"
-        role="list">
-            <template>
-                <b-button @click="menuToggle"
-                class="btn menu__close icon-sm">
-                    <font-awesome-icon icon="times"/>
-                </b-button>
-            </template>
-            <li
-            class="menu__item"
-            :class="{'menu__item--active': currentPage === 'index'}">
-                <NuxtLink
-                to="/"
-                class="menu__link pages-links">
-                    Home
-                </NuxtLink>
-            </li>
-            <li
-            class="menu__item dropdown_t"
-            :class="{'menu__item--active': currentPage === 'products'}">
-                <button @click="toggleSubMenu"
-                class="menu__link pages-link">
-                    <span 
-                    class="drop_down">
-                        <span class="drop_left">Products</span>
-                        <span class="icon-mini ml-2 drop_right">
-                            <template v-if="showSubMenu">
-                                <font-awesome-icon icon="angle-up"/>
-                            </template>
-                            <template v-else>
-                                <font-awesome-icon icon="angle-down"/>
-                            </template>
+  <header
+  id="AppHeader"
+  class="device-width">
+    <nav class="site-container">
+        <NuxtLink to="/" class="logo">
+            Logo
+        </NuxtLink>
+        <div class="menu">
+            <ul class="menu__list"
+            :class="{
+                'menu__list--show': showMenu,
+                'menu__list--hide': !showMenu
+            }"
+            role="list">
+                <template>
+                    <b-button @click="menuToggle"
+                    class="btn menu__close icon-sm">
+                        <font-awesome-icon icon="times"/>
+                    </b-button>
+                </template>
+                <li
+                class="menu__item"
+                :class="{'menu__item--active': currentPage === 'index'}">
+                    <NuxtLink
+                    to="/"
+                    class="menu__link pages-links">
+                        Home
+                    </NuxtLink>
+                </li>
+                <li
+                class="menu__item dropdown_t"
+                :class="{'menu__item--active': currentPage === 'products'}">
+                    <button @click="toggleSubMenu"
+                    class="menu__link pages-link">
+                        <span 
+                        class="drop_down">
+                            <span class="drop_left">Products</span>
+                            <span class="icon-mini ml-2 drop_right">
+                                <template v-if="showSubMenu">
+                                    <font-awesome-icon icon="angle-up"/>
+                                </template>
+                                <template v-else>
+                                    <font-awesome-icon icon="angle-down"/>
+                                </template>
+                            </span>
                         </span>
-                    </span>
-                </button>
-                <ul
-                role="list"
-                class="sub-menu products-categories"
-                :class="{'sub-menu--active': showSubMenu}">
-                    <li
-                    v-for="(category, i) in categories"
-                    :key="i"
-                    class="sub-menu__item">
-                        <NuxtLink
-                        :to="`/products/?category=${category.value}`"
-                        class="sub-pages-links">
-                        {{ category.text }}
-                        </NuxtLink>
-                    </li>
-                </ul>
-            </li>
-            <li
-            v-if="isFarmer"
-            class="menu__item"
-            :class="{'menu__item--active': currentPage === 'dashboard'}">
-                <NuxtLink
-                to="/dashboard"
-                class="menu__link pages-links">
-                    Dashboard
-                </NuxtLink>
-            </li>
-            <li
-            class="menu__item"
-            :class="{'menu__item--active': currentPage === 'about'}">
-                <NuxtLink
-                to="/about"
-                class="menu__link pages-links">
-                    About
-                </NuxtLink>
-            </li>
-            <li
-            class="menu__item"
-            :class="{'menu__item--active': currentPage === 'support'}">
-                <NuxtLink
-                to="/support"
-                class="menu__link pages-links">
-                    Support
-                </NuxtLink>
-            </li>
-        </ul>
-    </div>
-    <div class="actions">
-        <button
-        v-if="!isAuthenticated"
-        class="btn action__login">
-            <NuxtLink
-            to="/register"
-            class="menu__link">
-                Register
-            </NuxtLink>
-        </button>
-        <button class="btn action__avatar icon-sm">
-            <NuxtLink
+                    </button>
+                    <ul
+                    role="list"
+                    class="sub-menu products-categories"
+                    :class="{'sub-menu--active': showSubMenu}">
+                        <li
+                        v-for="(category, i) in categories"
+                        :key="i"
+                        class="sub-menu__item">
+                            <NuxtLink
+                            :to="`/products/?category=${category.value}`"
+                            class="sub-pages-links">
+                            {{ category.text }}
+                            </NuxtLink>
+                        </li>
+                    </ul>
+                </li>
+                <li
+                v-if="isFarmer"
+                class="menu__item"
+                :class="{'menu__item--active': currentPage === 'dashboard'}">
+                    <NuxtLink
+                    to="/dashboard"
+                    class="menu__link pages-links">
+                        Dashboard
+                    </NuxtLink>
+                </li>
+                <li
+                class="menu__item"
+                :class="{'menu__item--active': currentPage === 'about'}">
+                    <NuxtLink
+                    to="/about"
+                    class="menu__link pages-links">
+                        About
+                    </NuxtLink>
+                </li>
+                <li
+                class="menu__item"
+                :class="{'menu__item--active': currentPage === 'support'}">
+                    <NuxtLink
+                    to="/support"
+                    class="menu__link pages-links">
+                        Support
+                    </NuxtLink>
+                </li>
+            </ul>
+        </div>
+        <div class="actions">
+            <button
             v-if="!isAuthenticated"
-            to="/login"
-            class="menu__link">
-                <font-awesome-icon icon="user"/>
-            </NuxtLink>
-            <NuxtLink
-            v-else
-            to="/profile"
-            class="menu__link">
-                <font-awesome-icon icon="user"/>
-            </NuxtLink>
-        </button>
-        <button 
-        @click="menuToggle"
-        class="btn menu_toggle icon-sm">
-            <font-awesome-icon icon="bars"/>
-        </button>        
-    </div>
+            class="btn action__login">
+                <NuxtLink
+                to="/register"
+                class="menu__link">
+                    Register
+                </NuxtLink>
+            </button>
+            <button class="btn action__avatar icon-sm">
+                <NuxtLink
+                v-if="!isAuthenticated"
+                to="/login"
+                class="menu__link">
+                    <font-awesome-icon icon="user"/>
+                </NuxtLink>
+                <NuxtLink
+                v-else
+                to="/profile"
+                class="menu__link">
+                    <font-awesome-icon icon="user"/>
+                </NuxtLink>
+            </button>
+            <button 
+            @click="menuToggle"
+            class="btn menu_toggle icon-sm">
+                <font-awesome-icon icon="bars"/>
+            </button>        
+        </div>
+    </nav>
   </header>
 </template>
 
@@ -177,12 +181,16 @@ export default {
 <style scoped>
 header {
     background-color: var(--clr-ntrl-min);
-    display: flex;
-    justify-content: space-between;
     position: sticky;
     top: 0;
     z-index: 5 !important;
 }
+
+header nav {
+    display: flex;
+    justify-content: space-between;
+}
+
 
 .logo {
     display: flex;
