@@ -4,7 +4,10 @@
   class="device-width">
     <nav class="site-container">
         <NuxtLink to="/" class="logo">
-            Logo
+            <img 
+            class="logo-img"
+            src="~/assets/images/agrilink-logo.jpg" 
+            alt="Agrilink logo">
         </NuxtLink>
         <div class="menu">
             <ul class="menu__list"
@@ -76,7 +79,7 @@
                 class="menu__item"
                 :class="{'menu__item--active': currentPage === 'about'}">
                     <NuxtLink
-                    to="/about"
+                    to="#"
                     class="menu__link pages-links">
                         About
                     </NuxtLink>
@@ -85,7 +88,7 @@
                 class="menu__item"
                 :class="{'menu__item--active': currentPage === 'support'}">
                     <NuxtLink
-                    to="/support"
+                    to="#"
                     class="menu__link pages-links">
                         Support
                     </NuxtLink>
@@ -193,10 +196,16 @@ header nav {
 
 
 .logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 1rem;
+    display: block;
+    width: 165px;
+    height: 100%;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.logo-img {
+    height: 100%;
+    width: 100%;
 }
 
 .menu__list {

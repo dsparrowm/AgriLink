@@ -2,7 +2,10 @@
   <footer id="AppFooter">
     <div class="footer__info site-container">
         <div class="footer__sections">
-            <h2>LOGO</h2>
+            <h3 class="logo">
+                <span class="agri text-success">Agri</span>
+                <span class="link">Link</span>
+            </h3>
             <div>
                 <p class="d-flex">
                     <span class="icon-sm">
@@ -354,6 +357,13 @@ export default {
       flex: 1;
     }
 
+    h3 {
+        font-size: var(--fs-h1);
+    }
+
+    h3 .link {
+        margin-left: -25px;
+    }
 
     .footer__sections h2 {
         display: flex;
@@ -362,6 +372,11 @@ export default {
     /* Applies to Medium screens and above */
     @media (min-width: 68.0625em) {
         .footer__sections h2 {
+            margin-bottom: 2rem;
+            margin-top: 5rem;
+        }
+
+        h3 {
             margin-bottom: 2rem;
             margin-top: 5rem;
         }

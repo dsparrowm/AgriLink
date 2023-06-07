@@ -1,8 +1,8 @@
 export default {
   ssr: false,
   // Global page headers: https://go.nuxtjs.dev/config-head
-  target: 'server',
-  // target: 'static',
+  // target: 'server',
+  target: 'static',
 
   head: {
     title: 'AgriLink',
@@ -17,10 +17,6 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-      // {
-      //   rel: 'stylesheet',
-      //   href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css'
-      // }
     ]
   },
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -41,14 +37,26 @@ export default {
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     '@nuxtjs/fontawesome',
-    '@nuxtjs/moment'
+    '@nuxtjs/moment',
+    '@nuxtjs/google-fonts'
   ],
+
   fontawesome: {
     icons: {
       solid: true,
       brands: true
     }
   },
+
+  googleFonts: {
+    families: {
+      Roboto: true,
+      'Averia+Sans+Libre': [300, 400, 700],
+      'Open+Sans': [300, 400, 500, 700],
+      'DM+Sans': [400, 500, 700]
+    }
+  },
+
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/bootstrap

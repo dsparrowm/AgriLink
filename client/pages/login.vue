@@ -109,14 +109,17 @@ export default {
                     data: form,
                 });
 
-                if (res) {
-                    this.alertMessage = res.message;
+                if (res.status === 200 && res.data.hasOwnProperty('message')) {
+                    this.alertMessage = res.data.message;
                     this.alertType = 'success';
+                } else {
+                    this.alertMessage = res.data.error;
+                    this.alertType = 'danger';   
                 }
             } catch (error) {
                 this.alertMessage = 'Invalid email or password';
                 this.alertType = 'danger';
-                console.error(error)
+                console.error(error);
             }
         },
     }

@@ -14,7 +14,7 @@
       <div class="ml-auto mr-2">
         <NuxtLink 
         to="/"
-        class="icon-sm home__links">
+        class="icon-sm home__links text-success">
           <font-awesome-icon icon="home"/> 
         </NuxtLink>
       </div>
@@ -23,7 +23,9 @@
       <ul role="list"
       class="dash-menu__list">
         <li class="dash-menu__item">
-          <NuxtLink class="dash-menu__links dash-menu__links--active"
+          <NuxtLink
+          class="dash-menu__links"
+          :class="{'dash-menu__links--active': dashboard}"
           to="/dashboard">
           <span class="d-flex align-items-center">
             <span class="icon-md">
@@ -37,6 +39,7 @@
       </li>
       <li class="dash-menu__item">
         <NuxtLink class="dash-menu__links"
+        :class="{'dash-menu__links--active': productList}"
         to="/dashboard/product_listing">
         <span class="d-flex align-items-center">
           <span class="icon-md">
@@ -50,6 +53,7 @@
         </li>
         <li class="dash-menu__item">
           <NuxtLink class="dash-menu__links"
+          :class="{'dash-menu__links--active': orderList}"
           to="/dashboard/orders_listing">
           <span class="d-flex align-items-center">
             <span class="icon-md">
@@ -104,6 +108,18 @@ export default {
       'isAuthenticated',
       'loggedInUser'
     ]),
+
+    dashboard () {
+      return this.$route.name === 'dashboard';
+    },
+
+    productList () {
+      return this.$route.name === 'dashboard-product_listing';
+    },
+
+    orderList () {
+      return this.$route.name === 'dashboard-orders_listing';
+    },
 
     user () {
       return this.loggedInUser;

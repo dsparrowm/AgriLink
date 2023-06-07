@@ -385,6 +385,48 @@
         </div>
       </div>
     </section>
+    <section class="contact">
+      <div class="contact__empty"></div>
+      <b-form class="contact__form shadow rounded">
+        <h2 class="text-center">Get In Touch</h2>
+        <p class="text-center">
+          Contact us today to learn more about how you can be part of this exciting movement. Together, we can cultivate a brighter tomorrow.
+        </p>
+        
+        <b-input-group
+          class="form-group d-flex">
+            <b-form-input
+            id="full-name"
+            type="text"
+            placeholder="Your Full Name"
+            class="form-field mr-3"
+            required>
+            </b-form-input>
+            <b-form-input
+            id="email"
+            type="email"
+            placeholder="Your Email Address"
+            class="form-field"
+            required>
+            </b-form-input>
+        </b-input-group>
+        <b-input-group class="form-group">
+          <b-form-textarea
+            id="message"
+            placeholder="Write Your Message"
+            class="form-field w-100"
+            rows="3"
+            max-rows="6"
+            required
+          ></b-form-textarea>
+          </b-input-group>
+          <button
+          type="submit"
+          class="btn contact__btn w-100">
+            Get In Touch
+          </button>
+      </b-form>
+    </section>
   </main>
 </template>
 
@@ -395,7 +437,7 @@ export default {
   layout: 'main',
 
   head:{
-    title: 'AgriLink | Home'
+    title: 'AgriLink | Home',
   },
 
   methods: {
@@ -419,9 +461,7 @@ export default {
 .text-underline:hover {
   color: var(--clr-primary) !important;
 }
-.about__users {
-  color: var(--clr-ntrl-min);
-}
+
 
 .btn {
   background-color: var(--clr-primary);
@@ -444,7 +484,7 @@ export default {
   left: 0;
   display: flex;
   align-items: center;
-  background: rgba(57, 57, 57, 0.3);
+  background: rgba(57, 57, 57, 0.5);
 }
 
 .sliders__content {
@@ -506,10 +546,15 @@ h1, h2 {
 .services__left img {
   border-radius: 20px;
 }
-
+.contact__empty,
 .about__users {
-  min-height: 300px;
   background-color: var(--clr-primary-dkr);
+  background-image: url('../assets/images/testimonial-parallax.jpg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: var(--clr-ntrl-min);
+  min-height: 300px;
 }
 
 .counting {
@@ -663,19 +708,6 @@ h1, h2 {
   max-width: 350px;
 }
 
-/* .social-media-icons {
-  background-color: #546756;
-  border-radius: 50%;
-  height: 50px;
-  width: 50px;
-  text-align: center;
-  padding: .5rem 0;
-  margin-right: 1rem;
-  cursor: pointer;
-} */
-/* .social-media-icons:hover {
-  background-color: var(--clr-ntrl-min);
-} */
 .social-media-link  {
   text-decoration: none;
   color: var(--clr-ntrl-max);
@@ -685,5 +717,37 @@ h1, h2 {
 .social-media-link:hover {
   color: var(--clr-primary);
 }
-</style>
 
+.contact__form {
+  padding: 40px 30px 40px 30px;
+  margin-top: -80px;
+  margin-bottom: 100px;
+  background-color: var(--clr-ntrl-min);
+  max-width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 5;
+}
+
+.form-field {
+  padding: 2rem;
+  border: none;
+  border-radius: 30px;
+  display: inline-block;
+  background-color: aliceblue;
+}
+
+@media (max-width: 500px) {
+  .contact__form {
+    min-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .form-field {
+    padding: 1rem;
+    font-size: 14px;
+  }
+}
+
+</style>
