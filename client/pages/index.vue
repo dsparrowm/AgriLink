@@ -19,11 +19,12 @@
       <h1>
         Welcome to AgriLink
       </h1>
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Earum accusantium alias dolore animi voluptatum placeat velit officia! Suscipit
+      <p>
+        Welcome to AgriLink, where we are revolutionizing the way farmers in Africa connect with buyers, both locally and internationally. Our platform is dedicated to bridging the gap between farmers and buyers, empowering communities, and fostering sustainable agricultural practices.
       </p>
       <b-button
       href="/login"
-      class="hero__btn btn mt-5">
+      class="hero__btn btn">
         Get Started
       </b-button>
     </div>
@@ -37,7 +38,8 @@
       <h1>
         AgriLink sell fresh buy fresh
       </h1>
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Earum accusantium alias dolore animi voluptatum placeat velit officia! Suscipit
+      <p>
+        
       </p>
       <b-button
       href="/login"
@@ -64,21 +66,32 @@
               At AgriLink we bring the market to you
             </h2>
             <p class="my-3">
-              There are many variations of passages of Lorem Ipsum available but the majority have suffered alteration in some form by injected humour or randomised words which don't look even slightly believable.
+              We understand the challenges faced by farmers in accessing viable markets for their produce. Lack of infrastructure, limited resources, and inefficient distribution networks often hinder their ability to reach buyers who value their high-quality products. Simultaneously, buyers struggle to find reliable sources of fresh, ethically-sourced produce, especially when looking for unique offerings from Africa.
+              <br/>
+              Below are only but a few of what our platform offers:
             </p>
             <ul role="list">
               <li>
-                Subsistence farming is a type of agriculture
+                <span class="icon-mini text-success mr-2">
+                  <font-awesome-icon :icon="['fas', 'check-circle']" />
+                </span>
+                Access to fresh farm produce deliverd to your door step.
               </li>
-              <li>
-                Intensive subsistence agriculture is prevalent in the thickly
+              <li class="mt-2">
+                <span class="icon-mini text-success mr-2">
+                  <font-awesome-icon :icon="['fas', 'check-circle']" />
+                </span>
+                As a farmer you will have access to new customers across Africa from the comfort of your home.
               </li>
-              <li>
-                Mediterranean crops are a very important
+              <li class="mt-2">
+                <span class="icon-mini text-success mr-2">
+                  <font-awesome-icon :icon="['fas', 'check-circle']" />
+                </span>
+                Farmer Dashborad, here you get to see the performance of each product you have on display.
               </li>
             </ul>
             <b-button
-            href="/login"
+            href="#"
             class="btn services__btn mt-3">
               Our About Us
             </b-button>
@@ -281,7 +294,7 @@
             Our Team Members
           </h2>
           <p class="text-center">
-            There are many variations of passages of Lorem Ipsum available but the majority have suffered alteration by injected humour or randomised words which don't look even slightly believable.
+            Transparency, fairness, and sustainability are at the core of our values. We are committed to building trust and fostering long-term relationships based on mutual respect and shared success. Our team of passionate individuals brings together expertise in agriculture, technology, and business, with a common goal of making a meaningful impact on the lives of farmers and the broader agricultural community in Africa.
           </p>
         </div>
         <div>
@@ -291,40 +304,81 @@
                 title="FrontEnd Dev"
                 tag="article"
                 class="team__card shadow rounded"
-                img-src="../assets/images/farm-img.jpg"
+                img-src="../assets/images/team.jpeg"
                 img-height="300"
                 img-alt="Image"
                 img-top
               >
-              <b-card-text class="my-3 font-weight-bold">
+              <b-card-text class="mt-2 font-weight-bold">
                 Daniel Enagu
               </b-card-text>
-              <b-card-text>
-                <b-link
-                class="text-dark text-underline"
-                href="#foo">
-                View Profile
-                </b-link>
+              <b-card-text class="m-0">
+                <span class="social-media-icons ml-2">
+                  <a
+                  href="https://www.linkedin.com/in/enagudaniel/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="social-media-link">
+                    <font-awesome-icon :icon="['fab', 'linkedin']"/>
+                  </a>
+                </span>
+                <span class="social-media-icons ml-2">
+                  <a
+                  href="https://twitter.com/daniel_enagu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="social-media-link">
+                   <font-awesome-icon :icon="['fab', 'twitter']"/>
+                  </a>
+                </span>
+                <span class="social-media-icons ml-2">
+                  <a
+                  href="https://github.com/DannyEnagu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="social-media-link">
+                  <font-awesome-icon :icon="['fab', 'github']" />
+                  </a>
+                </span>
               </b-card-text>
               </b-card>
               <b-card
                 title="BackEnd Dev"
                 tag="article"
                 class="team__card shadow rounded"
-                img-src="../assets/images/farm-img.jpg"
+                img-src="../assets/images/team1.jpeg"
                 img-height="300"
                 img-alt="Image"
                 img-top
               >
-              <b-card-text class="my-3 font-weight-bold">
+              <b-card-text class="mt-2 font-weight-bold">
                 Davies Aniefiok
               </b-card-text>
-              <b-card-text>
-                <b-link
-                class="text-dark text-underline"
-                href="#foo">
-                  View Profile
-                </b-link>
+              <b-card-text class="m-0">
+                <span class="social-media-icons ml-2">
+                  <a href="https://www.linkedin.com/in/davies-aniefiok"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="social-media-link">
+                      <font-awesome-icon :icon="['fab', 'linkedin']"/>
+                  </a>
+                </span>
+                <span class="social-media-icons ml-2">
+                  <a href="http://twitter.com/dsparrowm"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="social-media-link">
+                  <font-awesome-icon :icon="['fab', 'twitter']"/>
+                  </a>
+                </span>
+                <span class="social-media-icons ml-2">
+                  <a href="http://github.com/dsparrowm"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="social-media-link">
+                   <font-awesome-icon :icon="['fab', 'github']" />
+                  </a>
+                </span>
               </b-card-text>
               </b-card>
           </div>
@@ -356,6 +410,9 @@ export default {
 </script>
 
 <style scoped>
+.icon-mini {
+  font-size: var(--fs-base);
+}
 .text-underline {
   text-decoration: underline;
 }
@@ -372,6 +429,12 @@ export default {
   border: none;
   border-radius: 30px;
   padding: 1rem 2rem;
+}
+
+@media (max-width: 68.0625em) {
+  .btn {
+    padding: 0.5rem 2rem;
+  }
 }
 
 .sliders >>> .carousel-caption {
@@ -395,8 +458,20 @@ export default {
 h1, h2 {
   font-weight: 700;
   font-size: var(--fs-kilo);
-  line-height: px;
   letter-spacing: -0.3px;
+}
+
+@media (max-width: 68.0625em) {
+  h1, h2 {
+    font-weight: 500;
+    font-size: var(--fs-h1);
+  }
+}
+
+@media (max-width: 0.032em) {
+  h1, h2 {
+    font-size: var(--fs-h6);
+  }
 }
 
 .services {
@@ -413,6 +488,18 @@ h1, h2 {
     margin-bottom: 100px;
     flex-direction: column-reverse;
     align-items: center;
+  }
+}
+
+.services__right,
+.services__left {
+  width: 50%;
+}
+
+@media (max-width: 68.0625em) {
+  .services__right,
+  .services__left {
+    width: 100%;
   }
 }
 
@@ -489,11 +576,13 @@ h1, h2 {
   text-transform: capitalize;
   margin-bottom: 0.75rem;
 }
+
 .our-team-card >>> .card-title {
   font-size: var(--fs-base);
   text-transform: capitalize;
   margin-bottom: 0.75rem;
 }
+
 .feature__btn {
   border: none;
   outline: none;
@@ -512,6 +601,13 @@ h1, h2 {
 .feature__btn:hover {
   background-color: var(--clr-primary);
   color: var(--clr-ntrl-min);
+}
+
+@media (max-width: 68.0625em) {
+  .booms > * + *,
+  .features > * + * {
+    margin-top: 2rem;
+  }
 }
 
 .testimonies {
@@ -555,8 +651,39 @@ h1, h2 {
   justify-content: center;
   gap: 2rem;
 }
+
+@media (max-width: 68.0625em) {
+  .our-team-card {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
 .team__card {
   max-width: 350px;
+}
+
+/* .social-media-icons {
+  background-color: #546756;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  text-align: center;
+  padding: .5rem 0;
+  margin-right: 1rem;
+  cursor: pointer;
+} */
+/* .social-media-icons:hover {
+  background-color: var(--clr-ntrl-min);
+} */
+.social-media-link  {
+  text-decoration: none;
+  color: var(--clr-ntrl-max);
+  font-size: 1.5rem;
+}
+
+.social-media-link:hover {
+  color: var(--clr-primary);
 }
 </style>
 
