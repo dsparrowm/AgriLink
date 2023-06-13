@@ -92,7 +92,7 @@
                 class="img-responsive"
                 height="100"
                 alt="New product Image"> -->
-                {{ productInfo.image }}
+                {{ productInfo.image.name }}
               </div>
               <label 
               for="product-img"
@@ -260,11 +260,11 @@ export default {
       let files = e.target.files || e.dataTransfer.files;
       if (files) {
         const file = files[0];
-       if (file.size > 1048576) {
+       if (file.size > 5000000) {
           e.preventDefault();
           this.loadingImage = false;
           this.fileError = true;
-          this.fileErrorMsg = 'File is too big must be less than 1MB!'
+          this.fileErrorMsg = 'File is too big. Must not be more than 5MB!'
         } else {
           this.productInfo.image = file;
           this.loadingImage = false;

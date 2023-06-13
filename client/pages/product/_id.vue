@@ -49,19 +49,28 @@
                 <b-card-text class="small">
                   {{ product.description }}
                 </b-card-text>
-                <h4 class="text-uppercase">About Farmer</h4>
-                <b-card-text class="mb-0">
-                  <span>name</span>
-                  <span>John Doe</span>
-                </b-card-text>
-                <b-card-text class="mb-0">
-                  <span>Farm Location</span>
-                  <span>No. 10 fake Street, Lagos Nigeria</span>
-                </b-card-text>
-                <b-card-text class="mb-0">
-                  <span>Contact Details</span>
-                  <span>+234 816 5555 892</span>
-                </b-card-text>
+                <template
+                v-if="productOwner">
+                  <h4 class="text-uppercase">About Farmer</h4>
+                  <b-card-text class="mb-0">
+                    <span>name: </span>
+                    <span>
+                      {{`${productOwner.first_name} ${productOwner.last_name}`}}
+                    </span>
+                  </b-card-text>
+                  <b-card-text class="mb-0">
+                    <span>Farm Location: </span>
+                    <span>
+                      {{ productOwner.location }}
+                    </span>
+                  </b-card-text>
+                  <b-card-text class="mb-0">
+                    <span>Contact Details: </span>
+                    <span>
+                      {{ productOwner.phone }}
+                    </span>
+                  </b-card-text>
+                </template>
               </b-card-text>
             </b-card-body>
           </b-col>
@@ -100,6 +109,7 @@ export default {
   methods: {
     ...mapActions ({
       getProductById: 'products/getProductById',
+      getProductOwerInfo: 'products/getProductOwerInfo',
     }),
 
     getImgUrl (url) {
@@ -111,7 +121,17 @@ export default {
         const res = await this.getProductById(this.productId);
         if (res) {
           this.product = res.data;
-          // this.product.description = res.data.description;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async fetchOwerInfo () {
+      try {
+        const res = await this.getProductOwerInfo(this.productId);
+        if (res) {
+          this.productOwner = res.data;
         }
       } catch (error) {
         console.error(error);
@@ -121,6 +141,7 @@ export default {
 
   mounted () {
     this.getSingleProduct();
+    this.fetchOwerInfo();
   }
 }
 </script>

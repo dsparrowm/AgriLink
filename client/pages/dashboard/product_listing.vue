@@ -174,22 +174,25 @@ export default {
       alertType: '',
       alertMessage: '',
       loading: false,
-      totalItems: null,
+      totalItems: 0,
       productList: [],
       currentPage: 1,
       perPage: 12,
       selectedCategory: null,
       searchInput: '',
-      def_option: { value: null, text: 'Please select Category' },
+      def_option: {
+        value: null, text: 'Please select Category'
+      },
       categories: PRODUCTS_CATEGORIES
     }
   },
 
-  // watch: {
-  //   selectedCategory (val) {
-  //     this.getProductList();
-  //   },
-  // },
+  watch: {
+    selectedCategory (val) {
+      this.currentPage = 1;
+      this.getProductList();
+    },
+  },
 
   computed: {
     rows () {
@@ -225,6 +228,13 @@ export default {
         if (res.status === 200 && res.data.hasOwnProperty('message')) {
           this.alertMessage = res.data.message;
           this.alertType = 'success';
+          // Find index of product to delete
+          const index = this.productList
+          .findIndex(product => {
+            return product.id === ID;
+          })
+          // Remove object at that index
+          this.productList.splice(index, 1);
         } else {
           this.alertMessage = res.data.error;
           this.alertType = 'danger';
@@ -236,13 +246,19 @@ export default {
       }
     },
 
-    async getProductList (page) {
+    async getProductList () {
+      console.log(this.currentPage, 'current page')
       this.loading = true;
       const pagination = {
-        page: page,
+        page: this.currentPage,
         per_page: this.perPage,
-        // category: this.selectedCategory || 'all'
       }
+
+      if (this.selectedCategory
+      && this.selectedCategory !== 'all') {
+        pagination['category'] = this.selectedCategory;
+      }
+
       try {
         const res = await this.farmerProductList(pagination);
         this.productList = res.data.products || [];
@@ -256,7 +272,7 @@ export default {
   },
 
   mounted () {
-    this.getProductList(this.currentPage);
+    this.getProductList();
   }
 }
 </script>

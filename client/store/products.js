@@ -90,6 +90,17 @@ export const actions = {
       });
   },
 
+  async getProductOwerInfo (commit, ID) {
+    return await this.$axios
+      .get(`/product/${ID}/farmer`)
+      .then(res => {
+        return res;
+      })
+      .catch(err => {
+        return err;
+      });
+  },
+
   async getUserOrderlist (commit) {
     return await this.$axios
       .get('/user/orders')

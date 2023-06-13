@@ -27,6 +27,7 @@ export const APP_PAGES = [
 ];
 
 export const PRODUCTS_CATEGORIES = [
+  { value: 'all', text: 'All' },
   { value: 'dairy', text: 'Dairy' },
   { value: 'eggs', text: 'Eggs' },
   { value: 'fruits', text: 'Fruits' },

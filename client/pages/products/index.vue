@@ -57,7 +57,7 @@
                 <div class="p-2">
                   <b-card-text 
                   class="d-flex justify-content-between mb-0">
-                    <b-card-text class="font-weight-bold mb-0">
+                    <b-card-text class="font-weight-bold mb-0 mr-2">
                       {{ product.name }}
                     </b-card-text>
                     <b-card-text class="small text-muted">

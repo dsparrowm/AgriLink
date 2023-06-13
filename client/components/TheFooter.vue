@@ -367,7 +367,7 @@ export default {
 
     .footer__sections h2 {
         display: flex;
-        justify-content: space-between;
+        justify-content: space-between; 
     }
     /* Applies to Medium screens and above */
     @media (min-width: 68.0625em) {

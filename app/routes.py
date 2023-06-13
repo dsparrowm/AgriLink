@@ -421,9 +421,6 @@ def add_product():
 @app.route('/product/<int:id>/delete', methods=['DELETE'])
 @jwt_required()
 def delete_product(id):
-    current_user = get_jwt_identity()
-    if current_user != id:
-        return jsonify({'error': 'Unauthorized'})
     product = Product.query.get(id)
     db.session.delete(product)
     db.session.commit()

@@ -148,15 +148,20 @@
         <monthly-summary></monthly-summary> -->
       </div>
     </div>
-    <div class="latest-orders mt-4">
+    <template
+    v-if="orderList.length">
+    <div
+    class="latest-orders mt-4">
       <h4>Latest orders</h4>
-      <div class="latest-orders__table">
+      <div
+      class="latest-orders__table">
         <order-list-table
           :fields="fields"
           :table-body="orderList">
         </order-list-table>
       </div>
     </div>
+    </template>
   </div>
 </template>
 
