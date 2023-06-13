@@ -187,7 +187,6 @@ def update_user(id):
             filename = secure_filename(file.filename)
             file_path = os.path.join(app.config['USER_IMAGE_FOLDER'], filename)
             file.save(file_path)
-            print(filename)
             user.image_url = filename
     
         db.session.commit()
@@ -401,7 +400,6 @@ def add_product():
 
     #Securely save the file to the upload directory
     filename = secure_filename(file.filename)
-    print(filename)
     file_path = os.path.join(app.config['PRODUCT_IMAGE_FOLDER'], filename)
     file.save(file_path)
 
