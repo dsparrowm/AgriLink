@@ -64,7 +64,7 @@
             <b-form-textarea
               id="product-desc"
               v-model="productInfo.description"
-              placeholder="Enter something..."
+              placeholder="Enter a short description for this product."
               class="form-field w-100"
               rows="3"
               max-rows="6"

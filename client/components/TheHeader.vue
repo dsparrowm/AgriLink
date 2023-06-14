@@ -415,7 +415,7 @@ header nav {
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    border: 3px inset grey;
+    border: 3px solid grey;
 }
 
 .user__icon--active {

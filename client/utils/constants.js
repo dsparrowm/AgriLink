@@ -34,8 +34,10 @@ export const PRODUCTS_CATEGORIES = [
   { value: 'grains', text: 'Grains and Cereals' },
   { value: 'herbs', text: 'Herbs and Spices' },
   { value: 'honey', text: 'Honey' },
-  { value: 'seeds', text: 'Nuts and Seeds' },
   { value: 'livestock', text: 'Livestock' },
+  { value: 'processed', text: 'Agri-processed goods' },
+  { value: 'tubers', text: 'Root and Tuber Crops' },
+  { value: 'seeds', text: 'Nuts and Seeds' },
   { value: 'specialty', text: 'Specialty' },
   { value: 'vegitable', text: 'Vegitable' }
 ];
