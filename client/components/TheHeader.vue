@@ -110,13 +110,17 @@
                 v-if="!isAuthenticated"
                 to="/login"
                 class="menu__link">
-                    <font-awesome-icon icon="user"/>
+                    <span class="user__icon">
+                        <font-awesome-icon icon="user"/>
+                    </span>
                 </NuxtLink>
                 <NuxtLink
                 v-else
                 to="/profile"
                 class="menu__link">
-                    <font-awesome-icon icon="user"/>
+                    <span class="user__icon user__icon--active">
+                        <font-awesome-icon icon="user"/>
+                    </span>
                 </NuxtLink>
             </button>
             <button 
@@ -402,5 +406,19 @@ header nav {
 .action__login {
     background-color: var(--clr-primary);
     color: var(--clr-ntrl-min);
+}
+
+.user__icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: 3px inset grey;
+}
+
+.user__icon--active {
+    border-color: var(--clr-primary);
 }
 </style>

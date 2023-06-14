@@ -1,8 +1,8 @@
 export default {
   ssr: false,
   // Global page headers: https://go.nuxtjs.dev/config-head
-  // target: 'server',
-  target: 'static',
+  target: 'server',
+  // target: 'static',
 
   head: {
     title: 'AgriLink',
@@ -90,7 +90,6 @@ export default {
         }
       }
     },
-    // redirect: false
     redirect: {
       login: '/login',
       logout: false,

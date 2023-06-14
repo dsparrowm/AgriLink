@@ -9,18 +9,32 @@
       </template>
       <div class="upload-img">
         <div 
-        class="upload-img__avatar border">
+        class="upload-img__avatar"
+        :class="{'border border-secondary': loadingImage}">
         <template
-        v-if="!userImgIsNull">
+        v-if="isImageSaved && !loadingImage">
         <img
           height="100%"
           width="100%"
           :src="getImgUrl(userObj.image_url)"
           v-bind:alt="userObj.image_url">
         </template>
-        <template v-else>
-          <img
-          src="../../assets/images/blank-profile-picture.png" alt="Avatar">
+        <template
+        v-else>
+            <template
+            v-if="loadingImage">
+            <div class="loading text-center w-100 mt-5">
+              <span class="fs-1">
+                <font-awesome-icon icon="spinner" />
+              </span>
+            </div>
+          </template>
+          <template
+          v-else>
+            <img
+            src="../../assets/images/blank-profile-picture.png"
+            alt="Avatar">
+          </template>
         </template>
         </div>
         <div class="upload-img__file">
@@ -143,6 +157,7 @@ export default {
   middleware: ['auth'],
   data () {
     return {
+      loadingImage: false,
       alertType: '',
       alertMessage: '',
       fileError: false,
@@ -161,6 +176,16 @@ export default {
     ...mapGetters({
       userObj: 'loggedInUser'
     }),
+
+    isImageSaved () {
+      try {
+        this.getImgUrl(this.userObj.image_url);
+        return true;
+      } catch (error) {
+        console.error(error.message);
+      }
+      return false;
+    },
 
     userImgIsNull () {
       return this.userObj.image_url === null;
@@ -214,12 +239,12 @@ export default {
           e.preventDefault();
           this.loadingImage = false;
           this.fileError = true;
-          this.fileErrorMsg = 'File is too big must be less than 1MB!'
+          this.fileErrorMsg = 'File is too big. Must not be greater than 5MB!';
         } else {
           this.payload['image'] = file;
+          this.updateProfile();
           this.loadingImage = false;
           this.fileError = false;
-          this.updateProfile();
         }
       }
     },
