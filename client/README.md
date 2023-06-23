@@ -1,4 +1,54 @@
-# client
+# Agrilink client
+
+The Client folder contains everything Front end. Here you will find the client faceing Apps code base, setups and configurations. The Frond end langauge used is [NuxtJS](https://v2.nuxt.com/) - The Intuitive Vue Framework.
+
+## Features
+
+- Modern and cross-broswer compatibility designs: With the help of [BootstrapVue](https://bootstrap-vue.org/).
+- Responsiveness: This project follow the mobile first approach.
+- Asynchronous data-fetching: nuxt/axios - Make is very easy to make asynchronous calls almost zero effort.
+- User registeration and authentication: nuxt/auth - The module authenticates users using a configurable authentication [scheme](https://auth.nuxtjs.org/guide/scheme).
+- Product listing: List all the products form database or list product by category.
+- User profile: Users can easily view, manage or update their profile informations.
+- Order placement and Payment: Buyers can place orders and easily make payment - with the help of [Flutterwave Vue.JS (Vue2) Library](https://github.com/Flutterwave/Vue-v3).
+- Farmer Dashboard: After log in, Farmers are routed to this page - where they are able to view sales analysis, orders (pending and completed), add new products on display, update product details, and more.
+
+## Important Routes/Pages
+
+- `/`: Landing page.
+- `/products/`: Product listing page.
+   - `?category=all`: list all product.
+   - `?category=<:name>`: list products by categories.
+- `/dashboard`: Only accessible to farmers.
+- `/pruduct/details`: Displays a more detail information about the product selected.
+- `/orders/`: List current users orders (that is, pending or completed).
+
+## Dependencies
+
+Some Important Front-end technologies:
+
+| Tools/Library          | Version |
+| ---------------------- |:-------:|
+|  [vue]                 | ^2.7.10 |
+|  [nuxt]                | ^2.15.8 |
+|  [nuxtjs/auth]         | ^4.9.1  |
+|  [flutterwave-vue-v3]  | ^1.0.9  |
+|  [nuxtjs/google-fonts] | ^3.0.1  |
+|  [vue-fontawesome]     | ^2.0.6  |
+|  [bootstrap-vue]       | ^2.22.0 |
+|  [vue-chartjs]         | ^4.1.1  |
+
+view the complete list of front-end dependencies in the corresponding [package.json].
+
+[vue]: https://vuejs.org/
+[nuxt]: https://v2.nuxt.com/
+[nuxtjs/auth]: https://auth.nuxtjs.org/
+[flutterwave-vue-v3]: https://github.com/Flutterwave/Vue-v3
+[nuxtjs/google-fonts]: https://google-fonts.nuxtjs.org/
+[vue-fontawesome]: https://fontawesome.com/docs/web/use-with/vue/
+[bootstrap-vue]: https://bootstrap-vue.org/
+[vue-chartjs]: https://vue-chartjs.org/guide/
+[package.json]: https://github.com/dsparrowm/AgriLink/blob/Development/client/package.json
 
 ## Build Setup
 
@@ -17,53 +67,5 @@ $ npm run start
 $ npm run generate
 ```
 
-For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
-
-## Special Directories
-
-You can create the following extra directories, some of which have special behaviors. Only `pages` is required; you can delete them if you don't want to use their functionality.
-
-### `assets`
-
-The assets directory contains your uncompiled assets such as Stylus or Sass files, images, or fonts.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/assets).
-
-### `components`
-
-The components directory contains your Vue.js components. Components make up the different parts of your page and can be reused and imported into your pages, layouts and even other components.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/components).
-
-### `layouts`
-
-Layouts are a great help when you want to change the look and feel of your Nuxt app, whether you want to include a sidebar or have distinct layouts for mobile and desktop.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/layouts).
-
-
-### `pages`
-
-This directory contains your application views and routes. Nuxt will read all the `*.vue` files inside this directory and setup Vue Router automatically.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/get-started/routing).
-
-### `plugins`
-
-The plugins directory contains JavaScript plugins that you want to run before instantiating the root Vue.js Application. This is the place to add Vue plugins and to inject functions or constants. Every time you need to use `Vue.use()`, you should create a file in `plugins/` and add its path to plugins in `nuxt.config.js`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/plugins).
-
-### `static`
-
-This directory contains your static files. Each file inside this directory is mapped to `/`.
-
-Example: `/static/robots.txt` is mapped as `/robots.txt`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/static).
-
-### `store`
-
-This directory contains your Vuex store files. Creating a file in this directory automatically activates Vuex.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
+## Author
+- Daniel Enagu [linkedIn handle](https://www.linkedin.com/in/enagudaniel/)

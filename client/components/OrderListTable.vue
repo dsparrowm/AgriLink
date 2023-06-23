@@ -28,11 +28,11 @@
   
         <template #cell(action)="row">
             <template
-            v-if="row.item.status !== 'completed'">
+            v-if="row.item.status !== 'confirmed'">
               <b-button
               size="sm"
               class="btn confirm-btn"
-              :disabled="row.item.status === 'completed'"
+              :disabled="row.item.status === 'confirmed'"
               @click="updateOrderStatus(row.item)">
                 Confirm
               </b-button>

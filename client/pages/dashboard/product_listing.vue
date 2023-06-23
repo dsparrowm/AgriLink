@@ -246,11 +246,10 @@ export default {
       }
     },
 
-    async getProductList () {
-      console.log(this.currentPage, 'current page')
+    async getProductList (page=1) {
       this.loading = true;
       const pagination = {
-        page: this.currentPage,
+        page: page,
         per_page: this.perPage,
       }
 
