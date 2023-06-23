@@ -1,27 +1,28 @@
 # Agrilink client
 
-The Client folder contains everything Front end. Here you will find the client faceing Apps code base, setups and configurations. The Frond end langauge used is [NuxtJS](https://v2.nuxt.com/) - The Intuitive Vue Framework.
+The Client folder contains everything Front end. Here you will find the client faceing site code base, setups and configurations. The Front End langauge used is [NuxtJS](https://v2.nuxt.com/) - The Intuitive Vue Framework.
 
 ## Features
 
 - Modern and cross-broswer compatibility designs: With the help of [BootstrapVue](https://bootstrap-vue.org/).
-- Responsiveness: This project follow the mobile first approach.
-- Asynchronous data-fetching: nuxt/axios - Make is very easy to make asynchronous calls almost zero effort.
-- User registeration and authentication: nuxt/auth - The module authenticates users using a configurable authentication [scheme](https://auth.nuxtjs.org/guide/scheme).
-- Product listing: List all the products form database or list product by category.
+- Responsiveness: This project follows the mobile first Website Development approach.
+- Asynchronous data-fetching: [nuxt/axios](https://axios.nuxtjs.org/) - Uses [Axios](https://github.com/axios/axios) (Promise based HTTP client for the browser and node.js) for making asynchronous APIs calls.
+- User registeration and authentication: [nuxt/auth](https://auth.nuxtjs.org/) - The module authenticates users using a configurable authentication [scheme](https://auth.nuxtjs.org/guide/scheme).
+- Product listing: List all products in database per page or list products by category.
 - User profile: Users can easily view, manage or update their profile informations.
 - Order placement and Payment: Buyers can place orders and easily make payment - with the help of [Flutterwave Vue.JS (Vue2) Library](https://github.com/Flutterwave/Vue-v3).
-- Farmer Dashboard: After log in, Farmers are routed to this page - where they are able to view sales analysis, orders (pending and completed), add new products on display, update product details, and more.
+- Farmer Dashboard: Farmer only page. After logging in, the user (that is, farmer) is redirected to his/her dashboard. where they are able to view sales analysis, view performance summary of each product on display in chart form, view orders (pending and completed), add new products on display, update product details, and more.
 
 ## Important Routes/Pages
 
-- `/`: Landing page.
+- `/`: Agrilink welcome/landing page.
 - `/products/`: Product listing page.
    - `?category=all`: list all product.
-   - `?category=<:name>`: list products by categories.
-- `/dashboard`: Only accessible to farmers.
-- `/pruduct/details`: Displays a more detail information about the product selected.
-- `/orders/`: List current users orders (that is, pending or completed).
+   - `?category=<:name>`: list products by category name.
+- `/product/details`: Displays a more detail information about the selected product.
+- `/profile`: displays current logged in user information. 
+- `/dashboard`: only accessible to farmers.
+- `/orders/`: list current users orders (that is, pending or completed).
 
 ## Dependencies
 
@@ -40,6 +41,13 @@ Some Important Front-end technologies:
 
 view the complete list of front-end dependencies in the corresponding [package.json].
 
+Packaging/Deployment:
+| Tools/Library  | Version  |
+| -------------- |:--------:|
+|  [node]        | ^14.20.0 |
+|  [npm]         | ^6.14.17 |
+
+
 [vue]: https://vuejs.org/
 [nuxt]: https://v2.nuxt.com/
 [nuxtjs/auth]: https://auth.nuxtjs.org/
@@ -49,6 +57,8 @@ view the complete list of front-end dependencies in the corresponding [package.j
 [bootstrap-vue]: https://bootstrap-vue.org/
 [vue-chartjs]: https://vue-chartjs.org/guide/
 [package.json]: https://github.com/dsparrowm/AgriLink/blob/Development/client/package.json
+[node]: https://nodejs.org/docs/latest-v14.x/api/
+[npm]: https://nodejs.org/docs/latest-v14.x/api/
 
 ## Build Setup
 
